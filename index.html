@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE FIELD MANUAL · ORLICKÉ HORY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;0,800;0,900;1,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      surface: "#000000",
+      background: "#000000",
+      primary: "#ccff00",
+      secondary: "#ff00ff",
+      tertiary: "#00ffff",
+      "on-background": "#ffffff",
+      "surface-container": "#111111",
+      "surface-container-high": "#1a1a1a",
+      "surface-container-highest": "#222222",
+      "on-primary": "#000000",
+      outline: "#333333"
+    },
+    borderRadius: { DEFAULT: "0rem", lg: "0rem", xl: "0rem", full: "9999px" },
+    fontFamily: {
+      display: ["Plus Jakarta Sans"],
+      headline: ["Plus Jakarta Sans"],
+      mono: ["JetBrains Mono"]
+    }
+  }}
+};
+</script>
+<style>
+:root { color-scheme: dark; }
+body { background: #000; color: #fff; font-family: 'JetBrains Mono', monospace; min-height: 100dvh; }
+.topo-grid {
+  background-image: radial-gradient(circle, #ccff0015 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.glitch { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
+.glitch-sm { text-shadow: 1px 0 #ff00ff, -1px 0 #00ffff; }
+.blob-lime { border: 2px solid #ccff00; box-shadow: 4px 4px 0 #ff00ff; background: #111; }
+.blob-cyan { border: 2px solid #00ffff; box-shadow: 4px 4px 0 #ccff00; background: #111; }
+.blob-magenta { border: 2px solid #ff00ff; box-shadow: 4px 4px 0 #00ffff; background: #111; }
+.blob-flat { border: 2px solid #ccff00; background: #111; }
+.spectral-filter { filter: contrast(150%) brightness(110%) saturate(200%) hue-rotate(60deg); }
+.scanlines { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(204,255,0,0.04) 2px, rgba(204,255,0,0.04) 3px); }
+.vibrating-eye {
+  width: 48px; height: 24px; background: #000; border: 2px solid #ccff00;
+  border-radius: 100% 0 100% 0 / 100% 0 100% 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  animation: vibrate 0.1s linear infinite;
+}
+.pupil { width: 12px; height: 12px; background: #ff00ff; border-radius: 50%; border: 1px solid #ccff00; }
+@keyframes vibrate {
+  0% { transform: translate(0); }
+  25% { transform: translate(1px,-1px); }
+  50% { transform: translate(-1px,1px); }
+  75% { transform: translate(1px,1px); }
+  100% { transform: translate(0); }
+}
+@keyframes pulse-border {
+  0%,100% { box-shadow: 4px 4px 0 #ff00ff; }
+  50% { box-shadow: 4px 4px 0 #00ffff; }
+}
+.pulse-border { animation: pulse-border 1.4s ease-in-out infinite; }
+
+/* Leaflet dark tweaks */
+#map { height: 360px; background: #000; border: 2px solid #ccff00; box-shadow: 4px 4px 0 #00ffff; }
+.leaflet-container { background: #000 !important; font-family: 'JetBrains Mono', monospace !important; }
+.leaflet-tile { filter: hue-rotate(180deg) saturate(140%) contrast(110%); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #000 !important; color: #ccff00 !important; border: 2px solid #ccff00 !important; border-radius: 0 !important; box-shadow: 4px 4px 0 #ff00ff !important; }
+.leaflet-popup-content { color: #ccff00 !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: 0.05em; }
+.leaflet-bar a { background: #000 !important; color: #ccff00 !important; border: 1px solid #ccff00 !important; border-radius: 0 !important; }
+.leaflet-bar a:hover { background: #ff00ff !important; color: #000 !important; }
+.leaflet-control-attribution { background: #000 !important; color: #ccff00 !important; font-family: 'JetBrains Mono', monospace !important; }
+.leaflet-control-attribution a { color: #ff00ff !important; }
+
+/* Native check restyle */
+input[type="checkbox"] { appearance: none; width: 20px; height: 20px; border: 2px solid #ccff00; background: #000; cursor: pointer; position: relative; flex-shrink: 0; }
+input[type="checkbox"]:checked { background: #ccff00; }
+input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 14px; }
+
+/* Pixel-frame for the map */
+.pixel-frame::before {
+  content: ""; position: absolute; inset: -2px; pointer-events: none;
+  background: linear-gradient(45deg, transparent 49%, #ccff00 49%, #ccff00 51%, transparent 51%) 0 0/8px 8px;
+  opacity: 0.15;
+}
+</style>
+</head>
+<body class="topo-grid pb-32 overflow-x-hidden">
+
+<!-- TOP BAR -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-5 h-16 bg-black border-b-2 border-primary">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-[24px]">sensors</span>
+    <h1 class="font-display text-[18px] uppercase tracking-tighter text-secondary italic font-black glitch">THE FIELD MANUAL</h1>
+  </div>
+  <div class="flex items-center gap-3">
+    <span id="countdown" class="font-mono text-[11px] font-bold text-primary uppercase">--</span>
+    <span class="material-symbols-outlined text-primary text-[20px]">settings</span>
+  </div>
+</header>
+
+<main class="mt-20 px-5 pb-8">
+
+  <!-- ===== BRIEFING ===== -->
+  <section id="briefing" class="mb-12 pt-2">
+    <div class="mb-6">
+      <p class="font-mono text-[11px] text-tertiary uppercase tracking-widest">OPERATION: ALPHA-RIDGE</p>
+      <h2 class="font-display text-[32px] leading-none font-black uppercase italic tracking-tighter text-primary glitch mt-1">Orlické Hory<br/>14-17.05.2026</h2>
+      <p class="font-mono text-[12px] text-on-background opacity-70 uppercase mt-2">Ridge walk · sudety · bunkers // 5-7 operatives</p>
+    </div>
+
+    <!-- Telemetry -->
+    <div class="blob-lime p-5 mb-6">
+      <div class="flex justify-between items-center border-b-2 border-primary pb-2 mb-4">
+        <span class="font-mono text-[12px] tracking-widest uppercase text-primary font-bold">TELEMETRY DATA</span>
+        <div class="vibrating-eye"><div class="pupil"></div></div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div class="flex flex-col">
+          <span class="font-mono text-[9px] text-tertiary opacity-80 uppercase tracking-wider">TOTAL KM</span>
+          <span class="font-mono text-[20px] text-primary font-bold">~55</span>
+        </div>
+        <div class="flex flex-col border-x-2 border-primary/30 px-3">
+          <span class="font-mono text-[9px] text-tertiary opacity-80 uppercase tracking-wider">ASCENT</span>
+          <span class="font-mono text-[20px] text-primary font-bold">+550m</span>
+        </div>
+        <div class="flex flex-col text-right">
+          <span class="font-mono text-[9px] text-tertiary opacity-80 uppercase tracking-wider">DAYS</span>
+          <span class="font-mono text-[20px] text-primary font-bold">4</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather strip -->
+    <div class="mb-6">
+      <h3 class="font-display text-[18px] uppercase italic text-primary mb-3 flex items-center gap-2">
+        ATMOSPHERIC FORECAST
+        <div class="h-[2px] flex-grow bg-secondary"></div>
+      </h3>
+      <div id="wx-warn"></div>
+      <div id="weather-grid" class="grid grid-cols-4 gap-2">
+        <div class="col-span-4 blob-flat p-4 text-center text-primary font-mono text-[11px] uppercase">Loading forecast...</div>
+      </div>
+      <p class="font-mono text-[9px] text-on-background opacity-50 mt-2 uppercase tracking-wider">Source: open-meteo.com · ridge 50.25N 16.5E · ~1000m</p>
+    </div>
+
+    <!-- Map -->
+    <div class="mb-6">
+      <h3 class="font-display text-[18px] uppercase italic text-primary mb-3 flex items-center gap-2">
+        TACTICAL OVERLAY
+        <div class="h-[2px] flex-grow bg-tertiary"></div>
+      </h3>
+      <div class="relative pixel-frame">
+        <div id="map"></div>
+        <div class="absolute top-3 left-3 z-[400] bg-secondary text-black px-2 py-1 font-mono text-[10px] border-2 border-primary uppercase font-bold tracking-wider pointer-events-none">SECTOR: ORLICKÉ HORY</div>
+        <div class="absolute bottom-3 right-3 z-[400] bg-black p-2 border-2 border-primary flex gap-2 pointer-events-none">
+          <span class="material-symbols-outlined text-tertiary text-[14px]" style="font-variation-settings:'FILL' 1">location_on</span>
+          <span class="font-mono text-[10px] text-primary font-bold">50.25N · 16.50E</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3 mt-3 text-[10px] font-mono uppercase tracking-wider">
+        <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-primary"></i><span class="text-primary">FRI · RIDGE</span></span>
+        <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-secondary"></i><span class="text-secondary">SAT · SUDETY</span></span>
+        <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-tertiary"></i><span class="text-tertiary">SUN · BORDER</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DISPATCH (4 day timeline) ===== -->
+  <section id="dispatch" class="mb-12">
+    <h3 class="font-display text-[24px] uppercase italic text-primary mb-6 flex items-center gap-2 glitch-sm">
+      STRATEGIC DISPATCH
+      <div class="h-[2px] flex-grow bg-secondary"></div>
+    </h3>
+
+    <div class="space-y-6 relative pl-8">
+      <div class="absolute left-3 top-0 bottom-0 w-[2px] bg-primary"></div>
+
+      <!-- DAY 01 -->
+      <div class="relative">
+        <div class="absolute -left-[29px] w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-black text-[14px]">train</span>
+        </div>
+        <div class="bg-surface-container-highest p-4 border-2 border-primary shadow-[2px_2px_0_#ff00ff]">
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">DAY 01 // 14.05 // TRANSFER</span>
+            <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">BOOKED</span>
+          </div>
+          <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Transfer &amp; Acclimatize</h4>
+          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-primary/30">
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DEST</span><div class="font-mono text-[13px] text-primary font-bold">Deštné</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">SLEEP</span><div class="font-mono text-[13px] text-primary font-bold">Guesthouse</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DEPART</span><div class="font-mono text-[13px] text-secondary font-bold">16:58</div></div>
+          </div>
+          <ul class="space-y-1 text-[12px] font-mono">
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">16:58</span> PRAHA HL.N. → CHOCEŇ</li>
+            <li><span class="text-tertiary">▶</span> CHOCEŇ → NOVÉ MĚSTO N.M.</li>
+            <li><span class="text-tertiary">▶</span> LOCAL BUS → DEŠTNÉ V O.H.</li>
+            <li><span class="text-secondary">☾</span> GUESTHOUSE</li>
+          </ul>
+          <div class="mt-3 border-l-2 border-secondary bg-secondary/10 pl-3 py-1.5 font-mono text-[11px] uppercase text-secondary">⚠ Beers + snacks on train. No hike.</div>
+        </div>
+      </div>
+
+      <!-- DAY 02 -->
+      <div class="relative">
+        <div class="absolute -left-[29px] w-6 h-6 bg-primary border-2 border-black flex items-center justify-center">
+          <span class="material-symbols-outlined text-black text-[14px]">hiking</span>
+        </div>
+        <div class="bg-surface-container p-4 border-2 border-tertiary shadow-[2px_2px_0_#ccff00]">
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-mono text-[10px] text-secondary uppercase tracking-widest">DAY 02 // 15.05 // RIDGE</span>
+            <span class="font-mono text-[9px] bg-tertiary text-black px-1.5 py-0.5 font-bold uppercase">FULL CREW</span>
+          </div>
+          <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Royal Ridge Walk</h4>
+          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-tertiary/30">
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">22-23 km</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ASCENT</span><div class="font-mono text-[13px] text-primary font-bold">+550 m</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">RATING</span><div class="font-mono text-[13px] text-primary font-bold">MEDIUM</div></div>
+          </div>
+          <ul class="space-y-1 text-[12px] font-mono">
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Deštné v O.h.</li>
+            <li><span class="text-tertiary">▶</span> Masaryk's hut <span class="opacity-50">// ridge entry</span></li>
+            <li><span class="text-primary">▲</span> <span class="text-primary font-bold">VELKÁ DEŠTNÁ, 1115 m</span> <span class="opacity-50">// peak</span></li>
+            <li><span class="text-tertiary">▶</span> Kunštátská chapel</li>
+            <li><span class="text-tertiary">▶</span> Pěticestí // descent</li>
+            <li><span class="text-secondary">☾</span> <span class="text-primary font-bold">NERATOV</span> // glass-roof church · <span class="text-secondary">SLEEP=OPEN</span></li>
+          </ul>
+          <div class="mt-3 border-l-2 border-secondary bg-secondary/10 pl-3 py-1.5 font-mono text-[11px] uppercase text-secondary">⚠ Smeky exfils Sat AM in Neratov.</div>
+        </div>
+      </div>
+
+      <!-- DAY 03 -->
+      <div class="relative">
+        <div class="absolute -left-[29px] w-6 h-6 bg-secondary border-2 border-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-black text-[14px]">fort</span>
+        </div>
+        <div class="bg-surface-container-highest p-4 border-2 border-primary shadow-[2px_2px_0_#00ffff]">
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">DAY 03 // 16.05 // SUDETY+BUNKER</span>
+            <span class="font-mono text-[9px] bg-secondary text-black px-1.5 py-0.5 font-bold uppercase">CLASSIFIED</span>
+          </div>
+          <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Abandoned Sudety</h4>
+          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-primary/30">
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">~22 km</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">THEME</span><div class="font-mono text-[13px] text-secondary font-bold">BUNKERS</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">SLEEP</span><div class="font-mono text-[13px] text-primary font-bold">ČIHÁK</div></div>
+          </div>
+          <ul class="space-y-1 text-[12px] font-mono">
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Neratov · breakfast</li>
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">VRCHNÍ ORLICE</span> · abandoned church <span class="opacity-50">// genius loci</span></li>
+            <li><span class="text-tertiary">▶</span> Lost village → ridge</li>
+            <li><span class="text-primary">▲</span> <span class="text-primary font-bold">HANIČKA ARTILLERY FORT</span> · Vlasta narrates</li>
+            <li><span class="text-tertiary">▶</span> Descent · Zemská brána gorge</li>
+            <li><span class="text-secondary">☾</span> <span class="text-primary font-bold">ČIHÁK</span> shelter <span class="text-secondary font-bold">OR</span> bivouac</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- DAY 04 -->
+      <div class="relative">
+        <div class="absolute -left-[29px] w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-black text-[14px]">flag</span>
+        </div>
+        <div class="bg-surface-container p-4 border-2 border-tertiary shadow-[2px_2px_0_#ff00ff]">
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-mono text-[10px] text-secondary uppercase tracking-widest">DAY 04 // 17.05 // EXFIL</span>
+            <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">BOOKED</span>
+          </div>
+          <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Walk-out / Border</h4>
+          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-tertiary/30">
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">~10.5 km</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">RETURN</span><div class="font-mono text-[13px] text-secondary font-bold">17:04</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">STATUS</span><div class="font-mono text-[13px] text-primary font-bold">✓ TRAIN</div></div>
+          </div>
+          <ul class="space-y-1 text-[12px] font-mono">
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Čihák</li>
+            <li><span class="text-tertiary">▶</span> Border line · <span class="text-primary font-bold">MT ADAM</span></li>
+            <li><span class="text-tertiary">▶</span> Bunkers along border</li>
+            <li><span class="text-tertiary">▶</span> Mladkov / Lichkov</li>
+            <li><span class="text-tertiary">▶</span> Train → Letohrad / Ústí n.O.</li>
+            <li><span class="text-secondary">★</span> <span class="text-primary font-bold">17:04</span> direct → PRAHA HL.N.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOGISTICS (sleep + shelters) ===== -->
+  <section id="logistics" class="mb-12">
+    <h3 class="font-display text-[24px] uppercase italic text-primary mb-2 flex items-center gap-2 glitch-sm">
+      LOGISTICS: OVERNIGHT
+      <div class="h-[2px] flex-grow bg-tertiary"></div>
+    </h3>
+    <p class="font-mono text-[11px] text-on-background opacity-70 uppercase mb-6 tracking-wider">v1.0 // SECTOR_2 // NERATOV · FRI 15.05</p>
+
+    <!-- Shelter #1 -->
+    <div class="blob-magenta p-5 mb-4 pulse-border">
+      <div class="flex justify-between items-start mb-3">
+        <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">TYPE: SECURE</span>
+        <span class="font-mono text-[10px] text-primary uppercase font-bold">[ACTIVE]</span>
+      </div>
+      <h4 class="font-display text-[24px] text-primary uppercase font-black italic leading-none mb-1">Shelter R-S 01</h4>
+      <p class="font-mono text-[10px] text-secondary uppercase mb-3 tracking-wider">[ NAME TBD // FILL IN COORDS ]</p>
+      <div class="bg-black border-2 border-primary p-3 mb-3 grid grid-cols-2 gap-2">
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ZONE</span><div class="font-mono text-[12px] text-primary font-bold">RIDGE GREEN ZONE</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">CAP</span><div class="font-mono text-[12px] text-primary font-bold">?? PAX</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DISTANCE</span><div class="font-mono text-[12px] text-primary font-bold">?? KM</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">FUEL</span><div class="font-mono text-[12px] text-primary font-bold">FIREPLACE</div></div>
+      </div>
+      <button onclick="voteShelter(1)" class="w-full bg-secondary text-black font-display text-[14px] py-3 border-2 border-primary uppercase font-black italic flex items-center justify-center gap-2 active:translate-x-0.5 active:translate-y-0.5">
+        <span class="material-symbols-outlined text-[18px]">how_to_vote</span> REQUEST ACCESS
+      </button>
+      <div id="tally1" class="font-mono text-[10px] text-tertiary mt-2 uppercase text-center tracking-wider">0 VOTES // THIS NODE</div>
+    </div>
+
+    <!-- Shelter #2 -->
+    <div class="blob-cyan p-5 mb-6">
+      <div class="flex justify-between items-start mb-3">
+        <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">TYPE: TRADITIONAL</span>
+        <span class="font-mono text-[10px] text-primary uppercase font-bold">[STANDBY]</span>
+      </div>
+      <h4 class="font-display text-[24px] text-primary uppercase font-black italic leading-none mb-1">Horská Bouda 02</h4>
+      <p class="font-mono text-[10px] text-secondary uppercase mb-3 tracking-wider">[ NAME TBD // FILL IN COORDS ]</p>
+      <div class="bg-black border-2 border-tertiary p-3 mb-3 grid grid-cols-2 gap-2">
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ZONE</span><div class="font-mono text-[12px] text-primary font-bold">VIOLET PERIMETER</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">CAP</span><div class="font-mono text-[12px] text-primary font-bold">?? PAX</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DISTANCE</span><div class="font-mono text-[12px] text-primary font-bold">?? KM</div></div>
+        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">FUEL</span><div class="font-mono text-[12px] text-primary font-bold">WOOD STOVE</div></div>
+      </div>
+      <button onclick="voteShelter(2)" class="w-full bg-tertiary text-black font-display text-[14px] py-3 border-2 border-primary uppercase font-black italic flex items-center justify-center gap-2 active:translate-x-0.5 active:translate-y-0.5">
+        <span class="material-symbols-outlined text-[18px]">visibility</span> VIEW PROTOCOL
+      </button>
+      <div id="tally2" class="font-mono text-[10px] text-tertiary mt-2 uppercase text-center tracking-wider">0 VOTES // THIS NODE</div>
+    </div>
+
+    <!-- Pre-sleep protocol -->
+    <h4 class="font-display text-[16px] uppercase italic text-primary mb-3 flex items-center gap-2">
+      PRE-SLEEP PROTOCOL
+      <div class="h-[2px] flex-grow bg-primary"></div>
+    </h4>
+    <div id="protocol" class="space-y-2 mb-6"></div>
+
+    <!-- Fallback -->
+    <div class="border-2 border-dashed border-primary/40 p-4 bg-primary/5">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="material-symbols-outlined text-primary text-[16px]">emergency</span>
+        <span class="font-mono text-[11px] text-primary uppercase tracking-widest font-bold">FALLBACK PROTOCOL</span>
+      </div>
+      <p class="font-mono text-[12px] text-on-background opacity-80 uppercase">Penzion Neratov + local inns. Verify by WED.</p>
+    </div>
+  </section>
+
+  <!-- ===== GEAR MANIFEST ===== -->
+  <section id="gear" class="mb-12">
+    <p class="font-mono text-[11px] text-secondary uppercase tracking-widest">MISSION_LOG // V1.85</p>
+    <h3 class="font-display text-[28px] uppercase italic text-primary glitch mb-1 leading-none font-black">GEAR MANIFEST</h3>
+    <div class="flex justify-between items-baseline mb-4">
+      <span id="packStats" class="font-mono text-[12px] text-tertiary uppercase tracking-wider">-- / --</span>
+      <div class="flex gap-2">
+        <button onclick="packAll(true)" class="font-mono text-[10px] uppercase border-2 border-primary text-primary px-2 py-1 hover:bg-primary hover:text-black tracking-wider">ALL ✓</button>
+        <button onclick="packAll(false)" class="font-mono text-[10px] uppercase border-2 border-secondary text-secondary px-2 py-1 hover:bg-secondary hover:text-black tracking-wider">ALL ✗</button>
+        <button onclick="packReset()" class="font-mono text-[10px] uppercase border-2 border-tertiary text-tertiary px-2 py-1 hover:bg-tertiary hover:text-black tracking-wider">RESET</button>
+      </div>
+    </div>
+    <div id="packing"></div>
+  </section>
+
+  <!-- Decorative footer marker -->
+  <div class="flex items-center gap-2 my-8">
+    <div class="h-[2px] flex-grow bg-primary"></div>
+    <span class="font-mono text-[9px] text-primary opacity-60 uppercase tracking-widest">END OF TRANSMISSION</span>
+    <div class="h-[2px] flex-grow bg-primary"></div>
+  </div>
+  <p class="font-mono text-[9px] text-on-background opacity-40 uppercase text-center tracking-wider">Updated <span id="updated">--</span> // For the ridge crew</p>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 w-full z-50 grid grid-cols-4 px-3 pb-2 pt-2 h-20 bg-black border-t-4 border-primary">
+  <a href="#briefing" data-tab="briefing" class="flex flex-col items-center justify-center text-primary opacity-70 transition-all">
+    <span class="material-symbols-outlined text-[22px]">menu_book</span>
+    <span class="font-mono text-[9px] uppercase tracking-wider font-bold">BRIEFING</span>
+  </a>
+  <a href="#dispatch" data-tab="dispatch" class="flex flex-col items-center justify-center text-primary opacity-70 transition-all">
+    <span class="material-symbols-outlined text-[22px]">campaign</span>
+    <span class="font-mono text-[9px] uppercase tracking-wider font-bold">DISPATCH</span>
+  </a>
+  <a href="#logistics" data-tab="logistics" class="flex flex-col items-center justify-center text-primary opacity-70 transition-all">
+    <span class="material-symbols-outlined text-[22px]">bed</span>
+    <span class="font-mono text-[9px] uppercase tracking-wider font-bold">LOGISTICS</span>
+  </a>
+  <a href="#gear" data-tab="gear" class="flex flex-col items-center justify-center text-primary opacity-70 transition-all">
+    <span class="material-symbols-outlined text-[22px]">inventory_2</span>
+    <span class="font-mono text-[9px] uppercase tracking-wider font-bold">GEAR</span>
+  </a>
+</nav>
+
+<!-- Decorative topo curves overlay -->
+<svg class="fixed inset-0 pointer-events-none z-0 opacity-15" width="100%" height="100%">
+  <path d="M-50,200 Q150,50 400,250 T800,100" fill="none" stroke="#ccff00" stroke-width="2"/>
+  <path d="M-100,600 Q200,450 450,650 T900,500" fill="none" stroke="#ff00ff" stroke-width="2"/>
+  <path d="M100,900 Q350,750 600,950" fill="none" stroke="#00ffff" stroke-width="1"/>
+</svg>
+
+<script>
+// ===== Countdown =====
+const tripStart = new Date('2026-05-14T16:58:00+02:00');
+function updateCountdown() {
+  const now = new Date();
+  const diff = tripStart - now;
+  const cd = document.getElementById('countdown');
+  if (diff < 0) {
+    const days = Math.floor((now - tripStart) / 86400000);
+    cd.textContent = days === 0 ? 'T+0 // ACTIVE' : `DAY ${days+1}/4`;
+  } else {
+    const days = Math.floor(diff / 86400000);
+    const hrs = Math.floor((diff % 86400000) / 3600000);
+    cd.textContent = days > 0 ? `T-${days}D ${hrs}H` : `T-${hrs}H`;
+    if (days <= 1) { cd.classList.remove('text-primary'); cd.classList.add('text-secondary','glitch-sm'); }
+  }
+}
+updateCountdown(); setInterval(updateCountdown, 60000);
+document.getElementById('updated').textContent = new Date().toISOString().slice(0,16).replace('T',' ');
+
+// ===== Bottom nav active state =====
+const navLinks = document.querySelectorAll('nav a[data-tab]');
+const sections = ['briefing','dispatch','logistics','gear'].map(id => document.getElementById(id));
+function syncNav() {
+  const y = window.scrollY + 100;
+  let active = 'briefing';
+  sections.forEach(s => { if (s && s.offsetTop <= y) active = s.id; });
+  navLinks.forEach(a => {
+    const isActive = a.dataset.tab === active;
+    a.classList.toggle('opacity-70', !isActive);
+    a.classList.toggle('opacity-100', isActive);
+    a.classList.toggle('bg-secondary', isActive);
+    a.classList.toggle('text-black', isActive);
+    a.classList.toggle('scale-105', isActive);
+    a.classList.toggle('text-primary', !isActive);
+  });
+}
+window.addEventListener('scroll', syncNav, { passive: true });
+syncNav();
+
+// ===== Map =====
+const POI = {
+  destne:        { name:'Deštné',          ll:[50.3030,16.3464] },
+  masarykHut:    { name:"Masaryk's hut",   ll:[50.3066,16.4080] },
+  velkaDestna:   { name:'Velká Deštná',    ll:[50.3061,16.4136] },
+  kunstatChapel: { name:'Kunštátská kap.', ll:[50.2475,16.4639] },
+  peticesti:     { name:'Pěticestí',       ll:[50.2003,16.5036] },
+  neratov:       { name:'Neratov',         ll:[50.1483,16.5764] },
+  vrchniOrlice:  { name:'Vrchní Orlice',   ll:[50.1549,16.5928] },
+  hanicka:       { name:'Hanička fort',    ll:[50.1378,16.6336] },
+  zemskaBrana:   { name:'Zemská brána',    ll:[50.1136,16.6489] },
+  cihak:         { name:'Čihák shelter',   ll:[50.0958,16.6753] },
+  adam:          { name:'Mt Adam',         ll:[50.0689,16.7233] },
+  mladkov:       { name:'Mladkov',         ll:[50.0578,16.7242] },
+  lichkov:       { name:'Lichkov',         ll:[50.0697,16.7344] }
+};
+
+const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([50.20,16.55],10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+  attribution:'© CartoDB · OSM', subdomains:'abcd', maxZoom: 17
+}).addTo(map);
+
+const friRoute = ['destne','masarykHut','velkaDestna','kunstatChapel','peticesti','neratov'].map(k => POI[k].ll);
+const satRoute = ['neratov','vrchniOrlice','hanicka','zemskaBrana','cihak'].map(k => POI[k].ll);
+const sunRoute = ['cihak','adam','mladkov'].map(k => POI[k].ll);
+
+L.polyline(friRoute, { color:'#ccff00', weight:4, opacity:1 }).addTo(map).bindPopup('FRI · RIDGE');
+L.polyline(satRoute, { color:'#ff00ff', weight:4, opacity:1, dashArray:'8,4' }).addTo(map).bindPopup('SAT · SUDETY');
+L.polyline(sunRoute, { color:'#00ffff', weight:4, opacity:1, dashArray:'2,4' }).addTo(map).bindPopup('SUN · BORDER');
+
+Object.values(POI).forEach(p => {
+  L.circleMarker(p.ll, { radius:5, color:'#ccff00', fillColor:'#000', fillOpacity:1, weight:2 })
+    .addTo(map).bindPopup(p.name.toUpperCase());
+});
+map.fitBounds([...friRoute,...satRoute,...sunRoute], { padding:[20,20] });
+
+// ===== Weather =====
+async function loadWeather() {
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=50.25&longitude=16.5&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=Europe/Prague&start_date=2026-05-14&end_date=2026-05-17';
+  try {
+    const r = await fetch(url);
+    renderWeather((await r.json()).daily);
+  } catch { document.getElementById('weather-grid').innerHTML = '<div class="col-span-4 blob-flat p-4 text-center text-secondary font-mono text-[10px] uppercase">// SIGNAL LOST //</div>'; }
+}
+function wcIcon(c) {
+  if (c === 0) return '☼'; if (c <= 2) return '◐'; if (c === 3) return '☁';
+  if (c <= 48) return '▒'; if (c <= 57) return '⋮'; if (c <= 67) return '╳';
+  if (c <= 77) return '❄'; if (c <= 82) return '╳'; if (c <= 86) return '❄';
+  if (c <= 99) return '⚡'; return '?';
+}
+function wcLabel(c) {
+  if (c === 0) return 'CLEAR'; if (c <= 2) return 'PARTIAL'; if (c === 3) return 'OVERCAST';
+  if (c <= 48) return 'FOG'; if (c <= 57) return 'DRIZZLE'; if (c <= 67) return 'RAIN';
+  if (c <= 77) return 'SNOW'; if (c <= 82) return 'SHOWERS'; if (c <= 86) return 'SNOW';
+  if (c <= 99) return 'STORM'; return '??';
+}
+function renderWeather(d) {
+  const labels = ['THU','FRI','SAT','SUN'];
+  let wet = false, storm = false;
+  let html = '';
+  for (let i = 0; i < d.time.length; i++) {
+    const dt = new Date(d.time[i]);
+    const dd = dt.getDate() + '.' + (dt.getMonth()+1) + '.';
+    const max = Math.round(d.temperature_2m_max[i]);
+    const min = Math.round(d.temperature_2m_min[i]);
+    const precip = d.temperature_2m_max[i] != null ? d.precipitation_sum[i] : 0;
+    const pProb = d.precipitation_probability_max[i] ?? 0;
+    const isWet = precip > 1 || pProb > 50;
+    if (i === 1 || i === 2) {
+      if (precip > 5) wet = true;
+      if (d.weathercode[i] >= 95) storm = true;
+    }
+    const boxClass = i === 0 ? 'blob-flat' : (i === 1 ? 'blob-lime' : (i === 2 ? 'blob-magenta' : 'blob-cyan'));
+    html += `
+      <div class="${boxClass} p-2 text-center">
+        <div class="font-mono text-[10px] text-tertiary uppercase tracking-widest">${labels[i]}</div>
+        <div class="font-mono text-[9px] opacity-60">${dd}</div>
+        <div class="text-[22px] text-primary leading-none my-1">${wcIcon(d.weathercode[i])}</div>
+        <div class="font-mono text-[12px] text-primary font-bold">${max}°/${min}°</div>
+        <div class="font-mono text-[9px] ${isWet ? 'text-secondary' : 'text-tertiary'} mt-1">${precip.toFixed(1)}mm</div>
+        <div class="font-mono text-[8px] opacity-60 uppercase mt-1">${wcLabel(d.weathercode[i])}</div>
+      </div>`;
+  }
+  document.getElementById('weather-grid').innerHTML = html;
+  if (wet || storm) {
+    const msg = storm ? '⚡ STORM RISK FRI/SAT // RIDGE UNSAFE // RECHECK AM' : '⚠ WET FRI/SAT // HARDSHELL + PACK COVER';
+    document.getElementById('wx-warn').innerHTML = `<div class="border-2 border-secondary bg-secondary/10 p-3 mb-3 font-mono text-[11px] text-secondary uppercase tracking-wider font-bold">${msg}</div>`;
+  }
+}
+loadWeather();
+
+// ===== Packing list =====
+const PACKING = [
+  { cat: 'ID & MONEY', items: [
+    { id:'op', name:'ID CARD' },
+    { id:'card', name:'CARD + CASH ~1500 CZK' },
+    { id:'vzp', name:'HEALTH-INS CARD' },
+    { id:'ticket', name:'TRAIN TICKET (THU 16:58 + SUN 17:04)' }
+  ]},
+  { cat: 'PACK & SLEEP', items: [
+    { id:'pack', name:'BACKPACK 40-50L' },
+    { id:'cover', name:'PACK RAIN COVER' },
+    { id:'sleepingBag', name:'SLEEPING BAG' },
+    { id:'pad', name:'SLEEPING PAD', hint:'IF SHELTER/BIVOUAC' },
+    { id:'bivy', name:'BIVY / PONCHO', hint:'BIVOUAC OPTION' }
+  ]},
+  { cat: 'CLOTHING (4D)', items: [
+    { id:'boots', name:'HIKING BOOTS (BROKEN-IN)' },
+    { id:'socks', name:'TREK SOCKS 3-4 PAIRS' },
+    { id:'pants', name:'TREK PANTS / SHORTS' },
+    { id:'tees', name:'MERINO TEES 2-3' },
+    { id:'midlayer', name:'MID-LAYER / FLEECE' },
+    { id:'shell', name:'HARDSHELL (RAIN+WIND)' },
+    { id:'beanie', name:'BEANIE + BUFF' },
+    { id:'nightLayer', name:'WARM NIGHT LAYER' },
+    { id:'underwear', name:'UNDERWEAR' }
+  ]},
+  { cat: 'HYGIENE / MEDIC', items: [
+    { id:'toothbrush', name:'TOOTHBRUSH + PASTE' },
+    { id:'soap', name:'TRAVEL SOAP' },
+    { id:'towel', name:'QUICK-DRY TOWEL' },
+    { id:'chafing', name:'CHAFING CREAM' },
+    { id:'firstAid', name:'FIRST-AID KIT' },
+    { id:'compeed', name:'COMPEED / BLISTERS' },
+    { id:'sun', name:'REPELLENT + SUNSCREEN' },
+    { id:'tp', name:'TP + SEALED BAG' }
+  ]},
+  { cat: 'FOOD / WATER', items: [
+    { id:'bottle', name:'BOTTLE 1.5-2L' },
+    { id:'filter', name:'WATER FILTER', hint:'BIVOUAC OPTION' },
+    { id:'snacks', name:'SNACKS + BARS (FRI+SAT)' },
+    { id:'dinner', name:'EVENING RATIONS' },
+    { id:'beers', name:'BEERS // TRAIN PHASE' },
+    { id:'mug', name:'MUG / STOVE', hint:'BIVOUAC OPTION' }
+  ]},
+  { cat: 'NAV / GADGETS', items: [
+    { id:'phone', name:'PHONE + CHARGER' },
+    { id:'powerbank', name:'POWERBANK 10K MAH' },
+    { id:'cables', name:'CABLES (USB-C, LIGHTNING)' },
+    { id:'maps', name:'MAPY.CZ OFFLINE / PAPER MAP' },
+    { id:'headlamp', name:'HEADLAMP + SPARE BATTERY' },
+    { id:'knife', name:'KNIFE / MULTITOOL' }
+  ]},
+  { cat: 'EXTRAS / RECON', items: [
+    { id:'camera', name:'CAMERA (V. ORLICE ATMO)' },
+    { id:'flask', name:'HIP FLASK // HANIČKA' },
+    { id:'trash', name:'WASTE BAG' }
+  ]}
+];
+
+const STORE = 'orlicke-hory-pack-2026';
+let state = JSON.parse(localStorage.getItem(STORE) || '{}');
+
+function renderPacking() {
+  const wrap = document.getElementById('packing');
+  let total = 0, done = 0;
+  let html = '';
+  for (const cat of PACKING) {
+    const catTotal = cat.items.length;
+    const catDone = cat.items.filter(i => state[i.id]).length;
+    total += catTotal; done += catDone;
+    const pct = Math.round(catDone/catTotal*100);
+    html += `<details class="border-2 border-primary mb-3 bg-surface-container shadow-[2px_2px_0_#ff00ff]" ${catDone < catTotal ? 'open' : ''}>
+      <summary class="cursor-pointer list-none p-3 flex justify-between items-center bg-black border-b-2 border-primary">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary text-[16px]">inventory_2</span>
+          <span class="font-display text-[14px] uppercase font-black italic text-primary tracking-tight">${cat.cat}</span>
+        </div>
+        <span class="font-mono text-[11px] text-tertiary font-bold">${catDone}/${catTotal}</span>
+      </summary>
+      <div class="h-1 bg-black"><div class="h-full bg-primary" style="width:${pct}%"></div></div>
+      <ul>`;
+    for (const it of cat.items) {
+      const ck = state[it.id] ? 'checked' : '';
+      const cls = state[it.id] ? 'opacity-50 line-through' : '';
+      html += `<li class="flex items-center gap-3 p-3 border-b border-primary/20 last:border-b-0">
+        <input type="checkbox" id="i_${it.id}" ${ck} onchange="toggleItem('${it.id}')">
+        <label for="i_${it.id}" class="flex-1 font-mono text-[12px] uppercase tracking-wider ${cls} cursor-pointer">${it.name}${it.hint ? ` <span class="text-secondary opacity-70">// ${it.hint}</span>` : ''}</label>
+      </li>`;
+    }
+    html += '</ul></details>';
+  }
+  wrap.innerHTML = html;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('packStats').innerHTML = `<span class="text-primary font-bold">${done}</span> / ${total} // <span class="text-secondary">${pct}%</span>`;
+}
+function toggleItem(id) { state[id] = !state[id]; localStorage.setItem(STORE, JSON.stringify(state)); renderPacking(); }
+function packAll(v) { for (const c of PACKING) for (const it of c.items) state[it.id] = v; localStorage.setItem(STORE, JSON.stringify(state)); renderPacking(); }
+function packReset() { if (!confirm('PURGE ALL CHECKS?')) return; state = {}; localStorage.removeItem(STORE); renderPacking(); }
+renderPacking();
+
+// ===== Shelter voting =====
+const VOTE_STORE = 'orlicke-hory-shelter-votes-2026';
+let votes = JSON.parse(localStorage.getItem(VOTE_STORE) || '{"1":0,"2":0}');
+function renderVotes() {
+  document.getElementById('tally1').textContent = `${votes['1']} VOTE${votes['1']===1?'':'S'} // THIS NODE`;
+  document.getElementById('tally2').textContent = `${votes['2']} VOTE${votes['2']===1?'':'S'} // THIS NODE`;
+}
+function voteShelter(n) { votes[String(n)] = (votes[String(n)] || 0) + 1; localStorage.setItem(VOTE_STORE, JSON.stringify(votes)); renderVotes(); }
+renderVotes();
+
+// ===== Pre-sleep protocol =====
+const PROTOCOL = [
+  { id:'thermal', name:'THERMAL BARRIER', detail:'Sleeping bag deployed' },
+  { id:'water', name:'WATER PURIFIED', detail:'Bottles refilled' },
+  { id:'beacon', name:'SIGNAL BEACON', detail:'Phone @ 50%+, headlamp checked' },
+  { id:'fuel', name:'FUEL RESERVE', detail:'Snacks for Sat AM ready' }
+];
+const PROTO_STORE = 'orlicke-hory-protocol-2026';
+let proto = JSON.parse(localStorage.getItem(PROTO_STORE) || '{}');
+function renderProto() {
+  const wrap = document.getElementById('protocol');
+  let html = '';
+  for (const p of PROTOCOL) {
+    const on = !!proto[p.id];
+    html += `
+      <div class="flex items-center justify-between bg-surface-container border-2 ${on ? 'border-primary' : 'border-outline'} p-3 ${on ? 'shadow-[2px_2px_0_#ccff00]' : ''}">
+        <div>
+          <div class="font-mono text-[12px] uppercase tracking-wider font-bold ${on ? 'text-primary' : 'text-on-background opacity-70'}">${on ? '✓ ' : '○ '}${p.name}</div>
+          <div class="font-mono text-[9px] opacity-50 uppercase tracking-wider">${p.detail}</div>
+        </div>
+        <button onclick="toggleProto('${p.id}')" class="relative w-12 h-6 ${on ? 'bg-primary' : 'bg-outline'} border border-primary transition-all">
+          <span class="absolute top-0.5 ${on ? 'right-0.5' : 'left-0.5'} w-4 h-4 ${on ? 'bg-secondary' : 'bg-on-background opacity-50'} transition-all"></span>
+        </button>
+      </div>`;
+  }
+  wrap.innerHTML = html;
+}
+function toggleProto(id) { proto[id] = !proto[id]; localStorage.setItem(PROTO_STORE, JSON.stringify(proto)); renderProto(); }
+renderProto();
+</script>
+</body>
+</html>
