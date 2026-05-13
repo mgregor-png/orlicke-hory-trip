@@ -14,19 +14,15 @@ tailwind.config = {
   darkMode: "class",
   theme: { extend: {
     colors: {
-      surface: "#000000",
-      background: "#000000",
-      primary: "#ccff00",
-      secondary: "#ff00ff",
-      tertiary: "#00ffff",
+      surface: "#000000", background: "#000000",
+      primary: "#ccff00", secondary: "#ff00ff", tertiary: "#00ffff",
       "on-background": "#ffffff",
       "surface-container": "#111111",
       "surface-container-high": "#1a1a1a",
       "surface-container-highest": "#222222",
-      "on-primary": "#000000",
-      outline: "#333333"
+      "on-primary": "#000000", outline: "#333333"
     },
-    borderRadius: { DEFAULT: "0rem", lg: "0rem", xl: "0rem", full: "9999px" },
+    borderRadius: { DEFAULT:"0rem", lg:"0rem", xl:"0rem", full:"9999px" },
     fontFamily: {
       display: ["Plus Jakarta Sans"],
       headline: ["Plus Jakarta Sans"],
@@ -37,60 +33,83 @@ tailwind.config = {
 </script>
 <style>
 :root { color-scheme: dark; }
-body { background: #000; color: #fff; font-family: 'JetBrains Mono', monospace; min-height: 100dvh; }
-.topo-grid {
-  background-image: radial-gradient(circle, #ccff0015 1px, transparent 1px);
-  background-size: 24px 24px;
-}
+body { background:#000; color:#fff; font-family:'JetBrains Mono', monospace; min-height:100dvh; }
+.topo-grid { background-image:radial-gradient(circle, #ccff0015 1px, transparent 1px); background-size:24px 24px; }
 .glitch { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
 .glitch-sm { text-shadow: 1px 0 #ff00ff, -1px 0 #00ffff; }
-.blob-lime { border: 2px solid #ccff00; box-shadow: 4px 4px 0 #ff00ff; background: #111; }
-.blob-cyan { border: 2px solid #00ffff; box-shadow: 4px 4px 0 #ccff00; background: #111; }
-.blob-magenta { border: 2px solid #ff00ff; box-shadow: 4px 4px 0 #00ffff; background: #111; }
-.blob-flat { border: 2px solid #ccff00; background: #111; }
-.spectral-filter { filter: contrast(150%) brightness(110%) saturate(200%) hue-rotate(60deg); }
-.scanlines { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(204,255,0,0.04) 2px, rgba(204,255,0,0.04) 3px); }
+.blob-lime { border:2px solid #ccff00; box-shadow:4px 4px 0 #ff00ff; background:#111; }
+.blob-cyan { border:2px solid #00ffff; box-shadow:4px 4px 0 #ccff00; background:#111; }
+.blob-magenta { border:2px solid #ff00ff; box-shadow:4px 4px 0 #00ffff; background:#111; }
+.blob-flat { border:2px solid #ccff00; background:#111; }
+
 .vibrating-eye {
-  width: 48px; height: 24px; background: #000; border: 2px solid #ccff00;
-  border-radius: 100% 0 100% 0 / 100% 0 100% 0;
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
-  animation: vibrate 0.1s linear infinite;
+  width:48px; height:24px; background:#000; border:2px solid #ccff00;
+  border-radius:100% 0 100% 0 / 100% 0 100% 0;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  animation:vibrate 0.1s linear infinite;
 }
-.pupil { width: 12px; height: 12px; background: #ff00ff; border-radius: 50%; border: 1px solid #ccff00; }
+.pupil { width:12px; height:12px; background:#ff00ff; border-radius:50%; border:1px solid #ccff00; }
 @keyframes vibrate {
-  0% { transform: translate(0); }
-  25% { transform: translate(1px,-1px); }
-  50% { transform: translate(-1px,1px); }
-  75% { transform: translate(1px,1px); }
-  100% { transform: translate(0); }
+  0% { transform:translate(0); } 25% { transform:translate(1px,-1px); }
+  50% { transform:translate(-1px,1px); } 75% { transform:translate(1px,1px); }
+  100% { transform:translate(0); }
 }
 @keyframes pulse-border {
   0%,100% { box-shadow: 4px 4px 0 #ff00ff; }
   50% { box-shadow: 4px 4px 0 #00ffff; }
 }
 .pulse-border { animation: pulse-border 1.4s ease-in-out infinite; }
+@keyframes stale-glitch {
+  0%,100% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(0); }
+  50% { text-shadow: 4px 0 #ff00ff, -4px 0 #00ffff; transform: translate(1px,-1px); }
+}
+.is-stale { animation: stale-glitch 0.3s steps(2) infinite; opacity: 0.7; }
 
-/* Leaflet dark tweaks */
-#map { height: 360px; background: #000; border: 2px solid #ccff00; box-shadow: 4px 4px 0 #00ffff; }
-.leaflet-container { background: #000 !important; font-family: 'JetBrains Mono', monospace !important; }
-.leaflet-tile { filter: hue-rotate(180deg) saturate(140%) contrast(110%); }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #000 !important; color: #ccff00 !important; border: 2px solid #ccff00 !important; border-radius: 0 !important; box-shadow: 4px 4px 0 #ff00ff !important; }
-.leaflet-popup-content { color: #ccff00 !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: 0.05em; }
-.leaflet-bar a { background: #000 !important; color: #ccff00 !important; border: 1px solid #ccff00 !important; border-radius: 0 !important; }
-.leaflet-bar a:hover { background: #ff00ff !important; color: #000 !important; }
-.leaflet-control-attribution { background: #000 !important; color: #ccff00 !important; font-family: 'JetBrains Mono', monospace !important; }
-.leaflet-control-attribution a { color: #ff00ff !important; }
+/* Leaflet dark frame */
+#map { height: 60vh; min-height: 480px; background:#000; border:2px solid #ccff00; box-shadow:4px 4px 0 #00ffff; }
+.leaflet-container { background:#000 !important; font-family:'JetBrains Mono', monospace !important; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background:#000 !important; color:#ccff00 !important; border:2px solid #ccff00 !important; border-radius:0 !important; box-shadow:4px 4px 0 #ff00ff !important; }
+.leaflet-popup-content { color:#ccff00 !important; font-weight:700 !important; text-transform:uppercase; letter-spacing:0.05em; margin:8px 12px !important; }
+.leaflet-popup-content button { background:#ff00ff; color:#000; padding:4px 8px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; margin-top:6px; border:2px solid #ccff00; }
+.leaflet-bar a { background:#000 !important; color:#ccff00 !important; border:1px solid #ccff00 !important; border-radius:0 !important; }
+.leaflet-bar a:hover { background:#ff00ff !important; color:#000 !important; }
+.leaflet-control-attribution { background:rgba(0,0,0,0.8) !important; color:#666 !important; font-family:'JetBrains Mono', monospace !important; font-size:9px !important; }
+.leaflet-control-attribution a { color:#999 !important; }
 
-/* Native check restyle */
-input[type="checkbox"] { appearance: none; width: 20px; height: 20px; border: 2px solid #ccff00; background: #000; cursor: pointer; position: relative; flex-shrink: 0; }
-input[type="checkbox"]:checked { background: #ccff00; }
-input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 14px; }
+/* Native checkbox restyle */
+input[type="checkbox"] { appearance:none; width:20px; height:20px; border:2px solid #ccff00; background:#000; cursor:pointer; position:relative; flex-shrink:0; }
+input[type="checkbox"]:checked { background:#ccff00; }
+input[type="checkbox"]:checked::after { content:"✕"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#000; font-weight:900; font-size:14px; }
 
-/* Pixel-frame for the map */
-.pixel-frame::before {
-  content: ""; position: absolute; inset: -2px; pointer-events: none;
-  background: linear-gradient(45deg, transparent 49%, #ccff00 49%, #ccff00 51%, transparent 51%) 0 0/8px 8px;
-  opacity: 0.15;
+/* Day filter chip */
+.day-chip { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; padding:6px 12px; border:2px solid #ccff00; color:#ccff00; background:#000; text-transform:uppercase; letter-spacing:0.05em; cursor:pointer; }
+.day-chip[data-active="1"] { background:#ccff00; color:#000; box-shadow: 2px 2px 0 #ff00ff; }
+
+/* details / expandable day card */
+details.day-card summary { list-style:none; cursor:pointer; }
+details.day-card summary::-webkit-details-marker { display:none; }
+details.day-card .chevron { transition:transform 0.2s; }
+details.day-card[open] .chevron { transform:rotate(180deg); }
+details.day-card .body { max-height:0; overflow:hidden; transition: max-height 0.3s ease-out; }
+details.day-card[open] .body { max-height:2000px; }
+details.day-card { scroll-margin-top: 80px; }
+
+/* POI button look (in route list) */
+button.poi-btn { background:transparent; border:none; color:inherit; font:inherit; padding:0; cursor:pointer; text-align:left; text-decoration:underline; text-decoration-style:dotted; text-decoration-color:#ff00ff; text-underline-offset:3px; }
+button.poi-btn:hover { color:#ff00ff; }
+
+/* POI bottom sheet */
+#poi-sheet { transform:translateY(100%); transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1); }
+#poi-sheet.open { transform:translateY(0); }
+#poi-backdrop { opacity:0; pointer-events:none; transition: opacity 0.2s; }
+#poi-backdrop.open { opacity:0.7; pointer-events:auto; }
+
+/* Custom POI icon (accommodation) */
+.acc-icon {
+  width:24px; height:24px; background:#ff00ff; border:2px solid #ccff00;
+  display:flex; align-items:center; justify-content:center;
+  color:#000; font-weight:900; font-size:14px;
+  box-shadow: 2px 2px 0 #00ffff;
 }
 </style>
 </head>
@@ -104,7 +123,7 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
   </div>
   <div class="flex items-center gap-3">
     <span id="countdown" class="font-mono text-[11px] font-bold text-primary uppercase">--</span>
-    <span class="material-symbols-outlined text-primary text-[20px]">settings</span>
+    <span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
   </div>
 </header>
 
@@ -145,6 +164,7 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
       <h3 class="font-display text-[18px] uppercase italic text-primary mb-3 flex items-center gap-2">
         ATMOSPHERIC FORECAST
         <div class="h-[2px] flex-grow bg-secondary"></div>
+        <span id="wx-source" class="font-mono text-[9px] text-tertiary opacity-60 normal-case">LIVE</span>
       </h3>
       <div id="wx-warn"></div>
       <div id="weather-grid" class="grid grid-cols-4 gap-2">
@@ -159,7 +179,14 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
         TACTICAL OVERLAY
         <div class="h-[2px] flex-grow bg-tertiary"></div>
       </h3>
-      <div class="relative pixel-frame">
+      <!-- Day filter chips -->
+      <div class="flex flex-wrap gap-2 mb-3" id="day-chips">
+        <button class="day-chip" data-day="all" data-active="1" onclick="filterDay('all')">ALL</button>
+        <button class="day-chip" data-day="fri" onclick="filterDay('fri')" style="border-color:#ccff00;color:#ccff00">FRI</button>
+        <button class="day-chip" data-day="sat" onclick="filterDay('sat')" style="border-color:#ff00ff;color:#ff00ff">SAT</button>
+        <button class="day-chip" data-day="sun" onclick="filterDay('sun')" style="border-color:#00ffff;color:#00ffff">SUN</button>
+      </div>
+      <div class="relative">
         <div id="map"></div>
         <div class="absolute top-3 left-3 z-[400] bg-secondary text-black px-2 py-1 font-mono text-[10px] border-2 border-primary uppercase font-bold tracking-wider pointer-events-none">SECTOR: ORLICKÉ HORY</div>
         <div class="absolute bottom-3 right-3 z-[400] bg-black p-2 border-2 border-primary flex gap-2 pointer-events-none">
@@ -171,176 +198,261 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
         <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-primary"></i><span class="text-primary">FRI · RIDGE</span></span>
         <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-secondary"></i><span class="text-secondary">SAT · SUDETY</span></span>
         <span class="flex items-center gap-1"><i class="inline-block w-3 h-1 bg-tertiary"></i><span class="text-tertiary">SUN · BORDER</span></span>
+        <span class="flex items-center gap-1"><span class="inline-flex w-3 h-3 items-center justify-center bg-secondary border border-primary text-black text-[8px] font-black">⌂</span><span class="text-secondary">SLEEP</span></span>
       </div>
     </div>
   </section>
 
-  <!-- ===== DISPATCH (4 day timeline) ===== -->
+  <!-- ===== DISPATCH (4 expandable day cards) ===== -->
   <section id="dispatch" class="mb-12">
     <h3 class="font-display text-[24px] uppercase italic text-primary mb-6 flex items-center gap-2 glitch-sm">
       STRATEGIC DISPATCH
       <div class="h-[2px] flex-grow bg-secondary"></div>
     </h3>
 
-    <div class="space-y-6 relative pl-8">
+    <div class="space-y-4 relative pl-8">
       <div class="absolute left-3 top-0 bottom-0 w-[2px] bg-primary"></div>
 
-      <!-- DAY 01 -->
-      <div class="relative">
-        <div class="absolute -left-[29px] w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
+      <!-- DAY 01 - Thu Transfer -->
+      <details class="day-card relative bg-surface-container-highest border-2 border-primary shadow-[2px_2px_0_#ff00ff]" data-day="day1">
+        <div class="absolute -left-[29px] top-3 w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-black text-[14px]">train</span>
         </div>
-        <div class="bg-surface-container-highest p-4 border-2 border-primary shadow-[2px_2px_0_#ff00ff]">
+        <summary class="p-4">
           <div class="flex justify-between items-start mb-2">
             <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">DAY 01 // 14.05 // TRANSFER</span>
             <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">BOOKED</span>
           </div>
           <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Transfer &amp; Acclimatize</h4>
-          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-primary/30">
+          <div class="grid grid-cols-3 gap-2 mt-3 py-2 border-y border-primary/30">
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DEST</span><div class="font-mono text-[13px] text-primary font-bold">Deštné</div></div>
-            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">SLEEP</span><div class="font-mono text-[13px] text-primary font-bold">Guesthouse</div></div>
+            <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">SLEEP</span><div class="font-mono text-[13px] text-primary font-bold">Anička</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DEPART</span><div class="font-mono text-[13px] text-secondary font-bold">16:58</div></div>
           </div>
-          <ul class="space-y-1 text-[12px] font-mono">
+          <div class="flex justify-end items-center mt-2 text-tertiary chevron">
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            <span class="font-mono text-[9px] ml-1 uppercase tracking-wider">DETAIL</span>
+          </div>
+        </summary>
+        <div class="body px-4 pb-4">
+          <ul class="space-y-1.5 text-[12px] font-mono mt-2">
             <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">16:58</span> PRAHA HL.N. → CHOCEŇ</li>
             <li><span class="text-tertiary">▶</span> CHOCEŇ → NOVÉ MĚSTO N.M.</li>
             <li><span class="text-tertiary">▶</span> LOCAL BUS → DEŠTNÉ V O.H.</li>
-            <li><span class="text-secondary">☾</span> GUESTHOUSE</li>
+            <li><span class="text-secondary">☾</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('anicka'); event.preventDefault();">APARTMÁNY ANIČKA</button></li>
           </ul>
           <div class="mt-3 border-l-2 border-secondary bg-secondary/10 pl-3 py-1.5 font-mono text-[11px] uppercase text-secondary">⚠ Beers + snacks on train. No hike.</div>
         </div>
-      </div>
+      </details>
 
-      <!-- DAY 02 -->
-      <div class="relative">
-        <div class="absolute -left-[29px] w-6 h-6 bg-primary border-2 border-black flex items-center justify-center">
+      <!-- DAY 02 - Fri Ridge -->
+      <details class="day-card relative bg-surface-container border-2 border-tertiary shadow-[2px_2px_0_#ccff00]" data-day="day2">
+        <div class="absolute -left-[29px] top-3 w-6 h-6 bg-primary border-2 border-black flex items-center justify-center">
           <span class="material-symbols-outlined text-black text-[14px]">hiking</span>
         </div>
-        <div class="bg-surface-container p-4 border-2 border-tertiary shadow-[2px_2px_0_#ccff00]">
+        <summary class="p-4">
           <div class="flex justify-between items-start mb-2">
             <span class="font-mono text-[10px] text-secondary uppercase tracking-widest">DAY 02 // 15.05 // RIDGE</span>
             <span class="font-mono text-[9px] bg-tertiary text-black px-1.5 py-0.5 font-bold uppercase">FULL CREW</span>
           </div>
           <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Royal Ridge Walk</h4>
-          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-tertiary/30">
+          <div class="grid grid-cols-3 gap-2 mt-3 py-2 border-y border-tertiary/30">
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">22-23 km</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ASCENT</span><div class="font-mono text-[13px] text-primary font-bold">+550 m</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">RATING</span><div class="font-mono text-[13px] text-primary font-bold">MEDIUM</div></div>
           </div>
-          <ul class="space-y-1 text-[12px] font-mono">
-            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Deštné v O.h.</li>
-            <li><span class="text-tertiary">▶</span> Masaryk's hut <span class="opacity-50">// ridge entry</span></li>
-            <li><span class="text-primary">▲</span> <span class="text-primary font-bold">VELKÁ DEŠTNÁ, 1115 m</span> <span class="opacity-50">// peak</span></li>
-            <li><span class="text-tertiary">▶</span> Kunštátská chapel</li>
-            <li><span class="text-tertiary">▶</span> Pěticestí // descent</li>
-            <li><span class="text-secondary">☾</span> <span class="text-primary font-bold">NERATOV</span> // glass-roof church · <span class="text-secondary">SLEEP=OPEN</span></li>
+          <div class="flex justify-end items-center mt-2 text-tertiary chevron">
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            <span class="font-mono text-[9px] ml-1 uppercase tracking-wider">DETAIL · 6 STOPS</span>
+          </div>
+        </summary>
+        <div class="body px-4 pb-4">
+          <ul class="space-y-1.5 text-[12px] font-mono mt-2">
+            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> <button class="poi-btn" onclick="openPOI('destne'); event.preventDefault();">Deštné v O.h.</button></li>
+            <li><span class="text-tertiary">▶</span> <button class="poi-btn" onclick="openPOI('masarykHut'); event.preventDefault();">Masaryk's hut</button> <span class="opacity-50">// ridge entry</span></li>
+            <li><span class="text-primary">▲</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('velkaDestna'); event.preventDefault();">VELKÁ DEŠTNÁ, 1115 m</button> <span class="opacity-50">// peak</span></li>
+            <li><span class="text-tertiary">▶</span> <button class="poi-btn" onclick="openPOI('kunstatChapel'); event.preventDefault();">Kunštátská chapel</button></li>
+            <li><span class="text-tertiary">▶</span> <button class="poi-btn" onclick="openPOI('peticesti'); event.preventDefault();">Pěticestí</button> // descent</li>
+            <li><span class="text-secondary">☾</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('neratov'); event.preventDefault();">NERATOV</button> · glass-roof church <span class="text-secondary">// SLEEP=TBD</span></li>
           </ul>
           <div class="mt-3 border-l-2 border-secondary bg-secondary/10 pl-3 py-1.5 font-mono text-[11px] uppercase text-secondary">⚠ Smeky exfils Sat AM in Neratov.</div>
         </div>
-      </div>
+      </details>
 
-      <!-- DAY 03 -->
-      <div class="relative">
-        <div class="absolute -left-[29px] w-6 h-6 bg-secondary border-2 border-primary flex items-center justify-center">
+      <!-- DAY 03 - Sat Sudety -->
+      <details class="day-card relative bg-surface-container-highest border-2 border-primary shadow-[2px_2px_0_#00ffff]" data-day="day3">
+        <div class="absolute -left-[29px] top-3 w-6 h-6 bg-secondary border-2 border-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-black text-[14px]">fort</span>
         </div>
-        <div class="bg-surface-container-highest p-4 border-2 border-primary shadow-[2px_2px_0_#00ffff]">
+        <summary class="p-4">
           <div class="flex justify-between items-start mb-2">
             <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">DAY 03 // 16.05 // SUDETY+BUNKER</span>
             <span class="font-mono text-[9px] bg-secondary text-black px-1.5 py-0.5 font-bold uppercase">CLASSIFIED</span>
           </div>
           <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Abandoned Sudety</h4>
-          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-primary/30">
+          <div class="grid grid-cols-3 gap-2 mt-3 py-2 border-y border-primary/30">
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">~22 km</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">THEME</span><div class="font-mono text-[13px] text-secondary font-bold">BUNKERS</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">SLEEP</span><div class="font-mono text-[13px] text-primary font-bold">ČIHÁK</div></div>
           </div>
-          <ul class="space-y-1 text-[12px] font-mono">
+          <div class="flex justify-end items-center mt-2 text-tertiary chevron">
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            <span class="font-mono text-[9px] ml-1 uppercase tracking-wider">DETAIL · INTEL CLASSIFIED</span>
+          </div>
+        </summary>
+        <div class="body px-4 pb-4">
+          <ul class="space-y-1.5 text-[12px] font-mono mt-2">
             <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Neratov · breakfast</li>
-            <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">VRCHNÍ ORLICE</span> · abandoned church <span class="opacity-50">// genius loci</span></li>
+            <li><span class="text-tertiary">▶</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('vrchniOrlice'); event.preventDefault();">VRCHNÍ ORLICE</button> · abandoned church <span class="opacity-50">// genius loci</span></li>
             <li><span class="text-tertiary">▶</span> Lost village → ridge</li>
-            <li><span class="text-primary">▲</span> <span class="text-primary font-bold">HANIČKA ARTILLERY FORT</span> · Vlasta narrates</li>
-            <li><span class="text-tertiary">▶</span> Descent · Zemská brána gorge</li>
-            <li><span class="text-secondary">☾</span> <span class="text-primary font-bold">ČIHÁK</span> shelter <span class="text-secondary font-bold">OR</span> bivouac</li>
+            <li><span class="text-primary">▲</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('hanicka'); event.preventDefault();">HANIČKA ARTILLERY FORT</button> · Vlasta narrates</li>
+            <li><span class="text-tertiary">▶</span> <button class="poi-btn" onclick="openPOI('zemskaBrana'); event.preventDefault();">Zemská brána gorge</button></li>
+            <li><span class="text-secondary">☾</span> <button class="poi-btn text-primary font-bold" onclick="openPOI('cihak'); event.preventDefault();">CHATA NA ČIHÁKU</button></li>
           </ul>
         </div>
-      </div>
+      </details>
 
-      <!-- DAY 04 -->
-      <div class="relative">
-        <div class="absolute -left-[29px] w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
+      <!-- DAY 04 - Sun Walk-out -->
+      <details class="day-card relative bg-surface-container border-2 border-tertiary shadow-[2px_2px_0_#ff00ff]" data-day="day4">
+        <div class="absolute -left-[29px] top-3 w-6 h-6 bg-tertiary border-2 border-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-black text-[14px]">flag</span>
         </div>
-        <div class="bg-surface-container p-4 border-2 border-tertiary shadow-[2px_2px_0_#ff00ff]">
+        <summary class="p-4">
           <div class="flex justify-between items-start mb-2">
             <span class="font-mono text-[10px] text-secondary uppercase tracking-widest">DAY 04 // 17.05 // EXFIL</span>
             <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">BOOKED</span>
           </div>
           <h4 class="font-display text-[20px] text-primary uppercase font-black italic leading-none">Walk-out / Border</h4>
-          <div class="grid grid-cols-3 gap-2 mt-3 mb-3 py-2 border-y border-tertiary/30">
+          <div class="grid grid-cols-3 gap-2 mt-3 py-2 border-y border-tertiary/30">
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DIST</span><div class="font-mono text-[13px] text-primary font-bold">~10.5 km</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">RETURN</span><div class="font-mono text-[13px] text-secondary font-bold">17:04</div></div>
             <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">STATUS</span><div class="font-mono text-[13px] text-primary font-bold">✓ TRAIN</div></div>
           </div>
-          <ul class="space-y-1 text-[12px] font-mono">
+          <div class="flex justify-end items-center mt-2 text-tertiary chevron">
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            <span class="font-mono text-[9px] ml-1 uppercase tracking-wider">DETAIL</span>
+          </div>
+        </summary>
+        <div class="body px-4 pb-4">
+          <ul class="space-y-1.5 text-[12px] font-mono mt-2">
             <li><span class="text-tertiary">▶</span> <span class="text-primary font-bold">START</span> Čihák</li>
-            <li><span class="text-tertiary">▶</span> Border line · <span class="text-primary font-bold">MT ADAM</span></li>
+            <li><span class="text-tertiary">▶</span> Border line · <button class="poi-btn text-primary font-bold" onclick="openPOI('adam'); event.preventDefault();">MT ADAM</button></li>
             <li><span class="text-tertiary">▶</span> Bunkers along border</li>
             <li><span class="text-tertiary">▶</span> Mladkov / Lichkov</li>
             <li><span class="text-tertiary">▶</span> Train → Letohrad / Ústí n.O.</li>
             <li><span class="text-secondary">★</span> <span class="text-primary font-bold">17:04</span> direct → PRAHA HL.N.</li>
           </ul>
         </div>
-      </div>
+      </details>
     </div>
   </section>
 
-  <!-- ===== LOGISTICS (sleep + shelters) ===== -->
+  <!-- ===== LOGISTICS (RACK LOG + EMERGENCY + Protocol) ===== -->
   <section id="logistics" class="mb-12">
     <h3 class="font-display text-[24px] uppercase italic text-primary mb-2 flex items-center gap-2 glitch-sm">
       LOGISTICS: OVERNIGHT
       <div class="h-[2px] flex-grow bg-tertiary"></div>
     </h3>
-    <p class="font-mono text-[11px] text-on-background opacity-70 uppercase mb-6 tracking-wider">v1.0 // SECTOR_2 // NERATOV · FRI 15.05</p>
+    <p class="font-mono text-[11px] text-on-background opacity-70 uppercase mb-6 tracking-wider">v2.0 // 3 nights // 7 operatives</p>
 
-    <!-- Shelter #1 -->
-    <div class="blob-magenta p-5 mb-4 pulse-border">
-      <div class="flex justify-between items-start mb-3">
-        <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">TYPE: SECURE</span>
-        <span class="font-mono text-[10px] text-primary uppercase font-bold">[ACTIVE]</span>
+    <!-- RACK LOG -->
+    <div class="blob-lime p-4 mb-6">
+      <div class="flex justify-between items-center border-b-2 border-primary pb-2 mb-3">
+        <span class="font-mono text-[12px] tracking-widest uppercase text-primary font-bold">RACK LOG</span>
+        <span class="font-mono text-[10px] text-tertiary uppercase">2/3 LOCKED</span>
       </div>
-      <h4 class="font-display text-[24px] text-primary uppercase font-black italic leading-none mb-1">Shelter R-S 01</h4>
-      <p class="font-mono text-[10px] text-secondary uppercase mb-3 tracking-wider">[ NAME TBD // FILL IN COORDS ]</p>
-      <div class="bg-black border-2 border-primary p-3 mb-3 grid grid-cols-2 gap-2">
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ZONE</span><div class="font-mono text-[12px] text-primary font-bold">RIDGE GREEN ZONE</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">CAP</span><div class="font-mono text-[12px] text-primary font-bold">?? PAX</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DISTANCE</span><div class="font-mono text-[12px] text-primary font-bold">?? KM</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">FUEL</span><div class="font-mono text-[12px] text-primary font-bold">FIREPLACE</div></div>
+
+      <!-- Night 1 - Anička -->
+      <div class="bg-black border-2 border-primary p-3 mb-3 shadow-[2px_2px_0_#ff00ff]">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">N01 // THU 14.05 // DEŠTNÉ</span>
+            <h4 class="font-display text-[18px] text-primary uppercase font-black italic leading-none mt-1">Apartmány Anička</h4>
+          </div>
+          <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">✓ BOOKED</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-2 mt-3">
+          <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">PAX</span><div class="font-mono text-[12px] text-primary font-bold">7 ADULTS</div></div>
+          <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ROOMS</span><div class="font-mono text-[12px] text-primary font-bold">2</div></div>
+        </div>
+        <a href="https://www.booking.com/hotel/cz/apartmany-depandace-anicka.cs.html" target="_blank" class="block w-full bg-primary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">↗ OPEN BOOKING.COM</a>
       </div>
-      <button onclick="voteShelter(1)" class="w-full bg-secondary text-black font-display text-[14px] py-3 border-2 border-primary uppercase font-black italic flex items-center justify-center gap-2 active:translate-x-0.5 active:translate-y-0.5">
-        <span class="material-symbols-outlined text-[18px]">how_to_vote</span> REQUEST ACCESS
-      </button>
-      <div id="tally1" class="font-mono text-[10px] text-tertiary mt-2 uppercase text-center tracking-wider">0 VOTES // THIS NODE</div>
+
+      <!-- Night 2 - Neratov TBD -->
+      <div class="bg-black border-2 border-secondary p-3 mb-3 shadow-[2px_2px_0_#00ffff] pulse-border">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">N02 // FRI 15.05 // NERATOV</span>
+            <h4 class="font-display text-[18px] text-secondary uppercase font-black italic leading-none mt-1">Útulna · OPTION</h4>
+          </div>
+          <span class="font-mono text-[9px] bg-secondary text-black px-1.5 py-0.5 font-bold uppercase">⚠ PENDING</span>
+        </div>
+        <p class="font-mono text-[11px] text-on-background opacity-80 uppercase mb-3">No accommodation yet. Mapy.cz pin is the working option. Decision needed by WED.</p>
+        <a href="https://mapy.com/s/revefanoze" target="_blank" class="block w-full bg-secondary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">↗ OPEN MAPY.CZ PIN</a>
+      </div>
+
+      <!-- Night 3 - Čihák -->
+      <div class="bg-black border-2 border-primary p-3 shadow-[2px_2px_0_#ff00ff]">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">N03 // SAT 16.05 // ČIHÁK</span>
+            <h4 class="font-display text-[18px] text-primary uppercase font-black italic leading-none mt-1">Chata Na Čiháku</h4>
+          </div>
+          <span class="font-mono text-[9px] bg-primary text-black px-1.5 py-0.5 font-bold uppercase">✓ LOCKED</span>
+        </div>
+        <p class="font-mono text-[10px] text-on-background opacity-70 uppercase mb-3">Čihák 12, Klášterec n.O.-Žamberk</p>
+        <a href="https://maps.app.goo.gl/Fuh76qaDHopoPtTe9" target="_blank" class="block w-full bg-primary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">↗ OPEN GOOGLE MAPS</a>
+      </div>
     </div>
 
-    <!-- Shelter #2 -->
-    <div class="blob-cyan p-5 mb-6">
-      <div class="flex justify-between items-start mb-3">
-        <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest">TYPE: TRADITIONAL</span>
-        <span class="font-mono text-[10px] text-primary uppercase font-bold">[STANDBY]</span>
+    <!-- EMERGENCY -->
+    <div class="border-4 border-secondary bg-black p-4 mb-6 shadow-[4px_4px_0_#ccff00]">
+      <div class="flex justify-between items-center border-b-2 border-secondary pb-2 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-[20px]">emergency</span>
+          <span class="font-display text-[16px] uppercase italic font-black text-secondary glitch-sm">EMERGENCY // S.O.S.</span>
+        </div>
+        <span class="font-mono text-[9px] text-tertiary uppercase">SCREENSHOT THIS</span>
       </div>
-      <h4 class="font-display text-[24px] text-primary uppercase font-black italic leading-none mb-1">Horská Bouda 02</h4>
-      <p class="font-mono text-[10px] text-secondary uppercase mb-3 tracking-wider">[ NAME TBD // FILL IN COORDS ]</p>
-      <div class="bg-black border-2 border-tertiary p-3 mb-3 grid grid-cols-2 gap-2">
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ZONE</span><div class="font-mono text-[12px] text-primary font-bold">VIOLET PERIMETER</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">CAP</span><div class="font-mono text-[12px] text-primary font-bold">?? PAX</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">DISTANCE</span><div class="font-mono text-[12px] text-primary font-bold">?? KM</div></div>
-        <div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">FUEL</span><div class="font-mono text-[12px] text-primary font-bold">WOOD STOVE</div></div>
+
+      <!-- Contact tiles -->
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <a href="tel:112" class="bg-secondary text-black p-3 border-2 border-primary block">
+          <div class="font-mono text-[9px] uppercase opacity-80">EU EMERGENCY</div>
+          <div class="font-mono text-[24px] font-black leading-none">112</div>
+        </a>
+        <a href="tel:1210" class="bg-primary text-black p-3 border-2 border-primary block">
+          <div class="font-mono text-[9px] uppercase opacity-80">HORSKÁ SLUŽBA</div>
+          <div class="font-mono text-[24px] font-black leading-none">1210</div>
+        </a>
+        <a href="tel:155" class="bg-black text-primary p-3 border-2 border-primary block">
+          <div class="font-mono text-[9px] uppercase opacity-80">MEDICAL</div>
+          <div class="font-mono text-[24px] font-black leading-none">155</div>
+        </a>
+        <a href="tel:158" class="bg-black text-tertiary p-3 border-2 border-tertiary block">
+          <div class="font-mono text-[9px] uppercase opacity-80">POLICE</div>
+          <div class="font-mono text-[24px] font-black leading-none">158</div>
+        </a>
       </div>
-      <button onclick="voteShelter(2)" class="w-full bg-tertiary text-black font-display text-[14px] py-3 border-2 border-primary uppercase font-black italic flex items-center justify-center gap-2 active:translate-x-0.5 active:translate-y-0.5">
-        <span class="material-symbols-outlined text-[18px]">visibility</span> VIEW PROTOCOL
-      </button>
-      <div id="tally2" class="font-mono text-[10px] text-tertiary mt-2 uppercase text-center tracking-wider">0 VOTES // THIS NODE</div>
+
+      <!-- RV protocol -->
+      <div class="bg-secondary/10 border-l-4 border-secondary p-3 mb-3">
+        <div class="font-mono text-[10px] text-secondary uppercase tracking-widest font-bold mb-1">RENDEZVOUS PROTOCOL</div>
+        <ul class="font-mono text-[11px] text-on-background space-y-1 uppercase">
+          <li>FRI · IF SEPARATED → NERATOV CHURCH BY 18:00</li>
+          <li>SAT · IF SEPARATED → CHATA ČIHÁK BY 18:00</li>
+          <li>SUN · IF SEPARATED → MLADKOV STATION BY 16:00</li>
+          <li>NO SIGNAL? STAY ON MARKED TRAIL, MOVE DOWN</li>
+        </ul>
+      </div>
+
+      <!-- Sleep GPS -->
+      <div class="font-mono text-[10px] text-tertiary uppercase tracking-widest font-bold mb-1">SLEEP GPS</div>
+      <div class="space-y-1 font-mono text-[10px] uppercase">
+        <div class="flex justify-between border-b border-outline pb-1"><span>N01 ANIČKA</span><span class="text-primary">50.3030 N · 16.3464 E</span></div>
+        <div class="flex justify-between border-b border-outline pb-1"><span>N02 NERATOV (TBD)</span><span class="text-secondary">~50.1483 N · 16.5764 E</span></div>
+        <div class="flex justify-between"><span>N03 ČIHÁK</span><span class="text-primary">50.0958 N · 16.6753 E</span></div>
+      </div>
     </div>
 
     <!-- Pre-sleep protocol -->
@@ -348,16 +460,7 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
       PRE-SLEEP PROTOCOL
       <div class="h-[2px] flex-grow bg-primary"></div>
     </h4>
-    <div id="protocol" class="space-y-2 mb-6"></div>
-
-    <!-- Fallback -->
-    <div class="border-2 border-dashed border-primary/40 p-4 bg-primary/5">
-      <div class="flex items-center gap-2 mb-1">
-        <span class="material-symbols-outlined text-primary text-[16px]">emergency</span>
-        <span class="font-mono text-[11px] text-primary uppercase tracking-widest font-bold">FALLBACK PROTOCOL</span>
-      </div>
-      <p class="font-mono text-[12px] text-on-background opacity-80 uppercase">Penzion Neratov + local inns. Verify by WED.</p>
-    </div>
+    <div id="protocol" class="space-y-2"></div>
   </section>
 
   <!-- ===== GEAR MANIFEST ===== -->
@@ -375,7 +478,7 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
     <div id="packing"></div>
   </section>
 
-  <!-- Decorative footer marker -->
+  <!-- Footer marker -->
   <div class="flex items-center gap-2 my-8">
     <div class="h-[2px] flex-grow bg-primary"></div>
     <span class="font-mono text-[9px] text-primary opacity-60 uppercase tracking-widest">END OF TRANSMISSION</span>
@@ -384,6 +487,25 @@ input[type="checkbox"]:checked::after { content: "✕"; position: absolute; inse
   <p class="font-mono text-[9px] text-on-background opacity-40 uppercase text-center tracking-wider">Updated <span id="updated">--</span> // For the ridge crew</p>
 
 </main>
+
+<!-- POI BOTTOM SHEET -->
+<div id="poi-backdrop" class="fixed inset-0 bg-black z-[60]" onclick="closePOI()"></div>
+<div id="poi-sheet" class="fixed left-0 right-0 bottom-0 z-[70] bg-black border-t-4 border-primary max-h-[80vh] overflow-y-auto" style="box-shadow: 0 -4px 0 #ff00ff;">
+  <div class="sticky top-0 bg-black border-b-2 border-primary p-4 flex justify-between items-center">
+    <span class="font-mono text-[10px] text-tertiary uppercase tracking-widest" id="poi-type">FIELD INTEL</span>
+    <button onclick="closePOI()" class="material-symbols-outlined text-secondary text-[24px]">close</button>
+  </div>
+  <div class="p-5">
+    <h4 id="poi-name" class="font-display text-[26px] uppercase italic font-black text-primary glitch leading-none mb-4">--</h4>
+    <div id="poi-meta" class="grid grid-cols-3 gap-2 mb-4 pb-3 border-b-2 border-primary/30"></div>
+    <p id="poi-lore" class="font-mono text-[13px] text-on-background opacity-90 leading-relaxed mb-4"></p>
+    <div class="flex gap-2">
+      <a id="poi-mapy" href="#" target="_blank" class="flex-1 bg-primary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">↗ MAPY.CZ</a>
+      <button id="poi-copy" onclick="copyPOIGPS()" class="flex-1 bg-secondary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">⎘ COPY GPS</button>
+    </div>
+    <div id="poi-copy-toast" class="hidden font-mono text-[10px] text-primary uppercase mt-2 text-center tracking-widest">✓ GPS COPIED</div>
+  </div>
+</div>
 
 <!-- BOTTOM NAV -->
 <nav class="fixed bottom-0 left-0 w-full z-50 grid grid-cols-4 px-3 pb-2 pt-2 h-20 bg-black border-t-4 border-primary">
@@ -452,49 +574,190 @@ function syncNav() {
 window.addEventListener('scroll', syncNav, { passive: true });
 syncNav();
 
-// ===== Map =====
+// ===== POI Registry (single source of truth) =====
 const POI = {
-  destne:        { name:'Deštné',          ll:[50.3030,16.3464] },
-  masarykHut:    { name:"Masaryk's hut",   ll:[50.3066,16.4080] },
-  velkaDestna:   { name:'Velká Deštná',    ll:[50.3061,16.4136] },
-  kunstatChapel: { name:'Kunštátská kap.', ll:[50.2475,16.4639] },
-  peticesti:     { name:'Pěticestí',       ll:[50.2003,16.5036] },
-  neratov:       { name:'Neratov',         ll:[50.1483,16.5764] },
-  vrchniOrlice:  { name:'Vrchní Orlice',   ll:[50.1549,16.5928] },
-  hanicka:       { name:'Hanička fort',    ll:[50.1378,16.6336] },
-  zemskaBrana:   { name:'Zemská brána',    ll:[50.1136,16.6489] },
-  cihak:         { name:'Čihák shelter',   ll:[50.0958,16.6753] },
-  adam:          { name:'Mt Adam',         ll:[50.0689,16.7233] },
-  mladkov:       { name:'Mladkov',         ll:[50.0578,16.7242] },
-  lichkov:       { name:'Lichkov',         ll:[50.0697,16.7344] }
+  destne:        { name:'Deštné v O.h.',   ll:[50.3030,16.3464], type:'TRAILHEAD' },
+  masarykHut:    { name:"Masaryk's Hut",   ll:[50.3066,16.4080], type:'MOUNTAIN HUT' },
+  velkaDestna:   { name:'Velká Deštná',    ll:[50.3061,16.4136], type:'PEAK',  elev:1115 },
+  kunstatChapel: { name:'Kunštátská Chapel', ll:[50.2475,16.4639], type:'CHAPEL' },
+  peticesti:     { name:'Pěticestí',        ll:[50.2003,16.5036], type:'JUNCTION' },
+  neratov:       { name:'Neratov',          ll:[50.1483,16.5764], type:'GLASS-ROOF CHURCH', elev:530 },
+  vrchniOrlice:  { name:'Vrchní Orlice',    ll:[50.1549,16.5928], type:'GHOST VILLAGE',   elev:580 },
+  hanicka:       { name:'Hanička Fort',     ll:[50.1378,16.6336], type:'ARTILLERY FORT',  elev:900 },
+  zemskaBrana:   { name:'Zemská Brána',     ll:[50.1136,16.6489], type:'GORGE',           elev:460 },
+  cihak:         { name:'Chata Na Čiháku',  ll:[50.0958,16.6753], type:'MOUNTAIN HUT' },
+  adam:          { name:'Mt Adam',          ll:[50.0689,16.7233], type:'BORDER PEAK',     elev:765 },
+  mladkov:       { name:'Mladkov',          ll:[50.0578,16.7242], type:'TRAIN STATION' },
+  lichkov:       { name:'Lichkov',          ll:[50.0697,16.7344], type:'TRAIN STATION' },
+  // Accommodation
+  anicka:        { name:'Apartmány Anička', ll:[50.3030,16.3464], type:'GUESTHOUSE',     acc:1 }
 };
 
+// Enriched POI details for the lore-worthy stops
+const POI_DETAILS = {
+  velkaDestna: {
+    water:'NONE', food:'NONE',
+    lore:'High point of the Orlické hory ridge. Royal Trail (Královská cesta) plaque marks the summit. On a clear day you can see the Krkonoše to the west and the Polish lowlands to the east.'
+  },
+  neratov: {
+    water:'YES', food:'YES',
+    lore:'Burnt by the retreating Red Army in 1945. Roofless for 50 years. Restored in 2008 with a glass roof so "the sky stays in." Run by a workshop for disabled adults: the cafe sells their honey and beeswax candles.'
+  },
+  vrchniOrlice: {
+    water:'NONE', food:'NONE',
+    lore:'Village erased in the 1946 Sudeten German expulsions. Only the Baroque church of St John of Nepomuk remains, standing alone in a sea of nothing. The graveyard headstones are still in place. Pure Sudety ghost-frequency.'
+  },
+  hanicka: {
+    water:'NONE', food:'NONE',
+    lore:'Czechoslovak artillery fort, completed 1937 against Hitler. Never fired a shot, gifted to the Reich at Munich. Re-purposed by the StB in the 1970s as a secret nuclear command bunker. Vlasta narrates here.'
+  },
+  zemskaBrana: {
+    water:'YES', food:'NONE',
+    lore:'Divoká Orlice river gorge. Granite walls, moss, cold water. The trail crossed the WWII fortification line here in 1938. Watch your step on the wet rocks.'
+  },
+  adam: {
+    water:'NONE', food:'NONE',
+    lore:'1938 light pillbox line (řopíky) right on the Czech-Polish wire. Stand with one foot in each country. The bunkers are concrete mushrooms now, half-swallowed by forest.'
+  },
+  anicka: {
+    water:'YES', food:'YES',
+    lore:'Apartments in Deštné v Orlických horách. Thu 14 May overnight, 7 adults across 2 rooms. Booked. Local bus drops you a few minutes away.'
+  },
+  cihak: {
+    water:'YES', food:'YES',
+    lore:'Mountain hut at Čihák 12 near Klášterec nad Orlicí. Sat night sleep, last bed before the walk-out to the border line and the train home Sunday.'
+  }
+};
+
+// ===== POI Sheet =====
+let currentPOI = null;
+function openPOI(slug) {
+  const p = POI[slug]; if (!p) return;
+  const d = POI_DETAILS[slug] || {};
+  currentPOI = slug;
+
+  document.getElementById('poi-name').textContent = p.name;
+  document.getElementById('poi-type').textContent = `// ${p.type}`;
+
+  const meta = [];
+  if (p.elev) meta.push(`<div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">ELEV</span><div class="font-mono text-[14px] text-primary font-bold">${p.elev} m</div></div>`);
+  if (d.water) meta.push(`<div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">WATER</span><div class="font-mono text-[14px] ${d.water==='YES'?'text-primary':'text-secondary'} font-bold">${d.water}</div></div>`);
+  if (d.food) meta.push(`<div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">FOOD</span><div class="font-mono text-[14px] ${d.food==='YES'?'text-primary':'text-secondary'} font-bold">${d.food}</div></div>`);
+  meta.push(`<div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">GPS</span><div class="font-mono text-[11px] text-primary font-bold">${p.ll[0].toFixed(4)}<br/>${p.ll[1].toFixed(4)}</div></div>`);
+  document.getElementById('poi-meta').innerHTML = meta.slice(0,3).join('');
+
+  document.getElementById('poi-lore').textContent = d.lore || `Waypoint on the route. ${p.type}.`;
+  document.getElementById('poi-mapy').href = `https://mapy.cz/turisticka?source=coor&id=${p.ll[1]},${p.ll[0]}&x=${p.ll[1]}&y=${p.ll[0]}&z=15`;
+  document.getElementById('poi-copy-toast').classList.add('hidden');
+
+  document.getElementById('poi-sheet').classList.add('open');
+  document.getElementById('poi-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePOI() {
+  document.getElementById('poi-sheet').classList.remove('open');
+  document.getElementById('poi-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+  currentPOI = null;
+}
+function copyPOIGPS() {
+  if (!currentPOI) return;
+  const p = POI[currentPOI];
+  navigator.clipboard.writeText(`${p.ll[0].toFixed(5)}, ${p.ll[1].toFixed(5)}`).then(() => {
+    document.getElementById('poi-copy-toast').classList.remove('hidden');
+    setTimeout(() => document.getElementById('poi-copy-toast').classList.add('hidden'), 2000);
+  });
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePOI(); });
+
+// ===== Map =====
 const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([50.20,16.55],10);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-  attribution:'© CartoDB · OSM', subdomains:'abcd', maxZoom: 17
+L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  attribution:'© OpenTopoMap (CC-BY-SA) · OpenStreetMap', maxZoom: 17, subdomains:'abc'
 }).addTo(map);
 
-const friRoute = ['destne','masarykHut','velkaDestna','kunstatChapel','peticesti','neratov'].map(k => POI[k].ll);
-const satRoute = ['neratov','vrchniOrlice','hanicka','zemskaBrana','cihak'].map(k => POI[k].ll);
-const sunRoute = ['cihak','adam','mladkov'].map(k => POI[k].ll);
+const friSlugs = ['destne','masarykHut','velkaDestna','kunstatChapel','peticesti','neratov'];
+const satSlugs = ['neratov','vrchniOrlice','hanicka','zemskaBrana','cihak'];
+const sunSlugs = ['cihak','adam','mladkov'];
+const friRoute = friSlugs.map(k => POI[k].ll);
+const satRoute = satSlugs.map(k => POI[k].ll);
+const sunRoute = sunSlugs.map(k => POI[k].ll);
 
-L.polyline(friRoute, { color:'#ccff00', weight:4, opacity:1 }).addTo(map).bindPopup('FRI · RIDGE');
-L.polyline(satRoute, { color:'#ff00ff', weight:4, opacity:1, dashArray:'8,4' }).addTo(map).bindPopup('SAT · SUDETY');
-L.polyline(sunRoute, { color:'#00ffff', weight:4, opacity:1, dashArray:'2,4' }).addTo(map).bindPopup('SUN · BORDER');
+const friLine = L.polyline(friRoute, { color:'#ccff00', weight:5, opacity:1 }).addTo(map).bindPopup('<b>FRI · ROYAL RIDGE</b><br/>22-23 km · +550 m');
+const satLine = L.polyline(satRoute, { color:'#ff00ff', weight:5, opacity:1, dashArray:'10,5' }).addTo(map).bindPopup('<b>SAT · SUDETY+BUNKER</b><br/>~22 km');
+const sunLine = L.polyline(sunRoute, { color:'#00ffff', weight:5, opacity:1, dashArray:'2,5' }).addTo(map).bindPopup('<b>SUN · BORDER LINE</b><br/>~10.5 km');
 
-Object.values(POI).forEach(p => {
-  L.circleMarker(p.ll, { radius:5, color:'#ccff00', fillColor:'#000', fillOpacity:1, weight:2 })
-    .addTo(map).bindPopup(p.name.toUpperCase());
+// POI markers
+const markers = {};
+Object.entries(POI).forEach(([k, p]) => {
+  const isAcc = p.acc || k === 'cihak';
+  let m;
+  if (isAcc) {
+    m = L.marker(p.ll, { icon: L.divIcon({ html: '<div class="acc-icon">⌂</div>', className:'', iconSize:[24,24], iconAnchor:[12,12] }) });
+  } else if (p.elev && p.elev > 700) {
+    m = L.marker(p.ll, { icon: L.divIcon({ html: `<div style="background:#ccff00;border:2px solid #ff00ff;padding:2px 4px;color:#000;font-family:JetBrains Mono;font-weight:900;font-size:9px;white-space:nowrap;box-shadow:2px 2px 0 #00ffff;">▲ ${p.elev}m</div>`, className:'', iconSize:[60,18], iconAnchor:[30,9] }) });
+  } else {
+    m = L.circleMarker(p.ll, { radius:5, color:'#ccff00', fillColor:'#000', fillOpacity:1, weight:2 });
+  }
+  m.addTo(map);
+  m.bindPopup(`<b>${p.name.toUpperCase()}</b><br/>${p.type}${p.elev?'<br/>'+p.elev+' m':''}<br/><button onclick="closePOIPopup();openPOI('${k}')">FULL INTEL →</button>`);
+  markers[k] = m;
 });
+
+function closePOIPopup() { map.closePopup(); }
+window.closePOIPopup = closePOIPopup;
+
+// Day filter chips
+function filterDay(day) {
+  document.querySelectorAll('.day-chip').forEach(c => c.dataset.active = (c.dataset.day === day) ? '1' : '0');
+  let bounds = [];
+  if (day === 'all' || day === 'fri') bounds = bounds.concat(friRoute);
+  if (day === 'all' || day === 'sat') bounds = bounds.concat(satRoute);
+  if (day === 'all' || day === 'sun') bounds = bounds.concat(sunRoute);
+  if (day === 'all') {
+    bounds = [...friRoute, ...satRoute, ...sunRoute];
+  } else {
+    bounds = day === 'fri' ? friRoute : day === 'sat' ? satRoute : sunRoute;
+  }
+  if (bounds.length) map.flyToBounds(bounds, { padding:[30,30], duration:0.8 });
+}
+window.filterDay = filterDay;
 map.fitBounds([...friRoute,...satRoute,...sunRoute], { padding:[20,20] });
 
-// ===== Weather =====
+// ===== Weather (with localStorage cache) =====
+const WX_STORE = 'orlicke-wx-cache';
+const WX_TTL_MS = 6 * 60 * 60 * 1000; // 6h
+
+function loadWeatherFromCache() {
+  try {
+    const raw = localStorage.getItem(WX_STORE);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    return { data, ts, age: Date.now() - ts };
+  } catch { return null; }
+}
+function saveWeatherCache(data) {
+  try { localStorage.setItem(WX_STORE, JSON.stringify({ data, ts: Date.now() })); } catch {}
+}
+
 async function loadWeather() {
+  // Render from cache immediately if available
+  const cached = loadWeatherFromCache();
+  if (cached) {
+    const isStale = cached.age > WX_TTL_MS;
+    renderWeather(cached.data, isStale ? 'CACHED · STALE' : 'CACHED');
+  }
+
+  // Then try fresh fetch
   const url = 'https://api.open-meteo.com/v1/forecast?latitude=50.25&longitude=16.5&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=Europe/Prague&start_date=2026-05-14&end_date=2026-05-17';
   try {
     const r = await fetch(url);
-    renderWeather((await r.json()).daily);
-  } catch { document.getElementById('weather-grid').innerHTML = '<div class="col-span-4 blob-flat p-4 text-center text-secondary font-mono text-[10px] uppercase">// SIGNAL LOST //</div>'; }
+    const data = (await r.json()).daily;
+    saveWeatherCache(data);
+    renderWeather(data, 'LIVE');
+  } catch {
+    if (!cached) document.getElementById('weather-grid').innerHTML = '<div class="col-span-4 blob-flat p-4 text-center text-secondary font-mono text-[10px] uppercase">// SIGNAL LOST //</div>';
+  }
 }
 function wcIcon(c) {
   if (c === 0) return '☼'; if (c <= 2) return '◐'; if (c === 3) return '☁';
@@ -508,16 +771,17 @@ function wcLabel(c) {
   if (c <= 77) return 'SNOW'; if (c <= 82) return 'SHOWERS'; if (c <= 86) return 'SNOW';
   if (c <= 99) return 'STORM'; return '??';
 }
-function renderWeather(d) {
+function renderWeather(d, source) {
   const labels = ['THU','FRI','SAT','SUN'];
   let wet = false, storm = false;
   let html = '';
+  const isStale = source && source.includes('STALE');
   for (let i = 0; i < d.time.length; i++) {
     const dt = new Date(d.time[i]);
     const dd = dt.getDate() + '.' + (dt.getMonth()+1) + '.';
     const max = Math.round(d.temperature_2m_max[i]);
     const min = Math.round(d.temperature_2m_min[i]);
-    const precip = d.temperature_2m_max[i] != null ? d.precipitation_sum[i] : 0;
+    const precip = d.precipitation_sum[i] || 0;
     const pProb = d.precipitation_probability_max[i] ?? 0;
     const isWet = precip > 1 || pProb > 50;
     if (i === 1 || i === 2) {
@@ -526,7 +790,7 @@ function renderWeather(d) {
     }
     const boxClass = i === 0 ? 'blob-flat' : (i === 1 ? 'blob-lime' : (i === 2 ? 'blob-magenta' : 'blob-cyan'));
     html += `
-      <div class="${boxClass} p-2 text-center">
+      <div class="${boxClass} p-2 text-center ${isStale ? 'is-stale' : ''}">
         <div class="font-mono text-[10px] text-tertiary uppercase tracking-widest">${labels[i]}</div>
         <div class="font-mono text-[9px] opacity-60">${dd}</div>
         <div class="text-[22px] text-primary leading-none my-1">${wcIcon(d.weathercode[i])}</div>
@@ -536,12 +800,37 @@ function renderWeather(d) {
       </div>`;
   }
   document.getElementById('weather-grid').innerHTML = html;
+  document.getElementById('wx-source').textContent = source || 'LIVE';
+  document.getElementById('wx-source').classList.toggle('text-secondary', isStale);
+  document.getElementById('wx-source').classList.toggle('is-stale', isStale);
   if (wet || storm) {
     const msg = storm ? '⚡ STORM RISK FRI/SAT // RIDGE UNSAFE // RECHECK AM' : '⚠ WET FRI/SAT // HARDSHELL + PACK COVER';
     document.getElementById('wx-warn').innerHTML = `<div class="border-2 border-secondary bg-secondary/10 p-3 mb-3 font-mono text-[11px] text-secondary uppercase tracking-wider font-bold">${msg}</div>`;
+  } else {
+    document.getElementById('wx-warn').innerHTML = '';
   }
 }
 loadWeather();
+
+// ===== Auto-expand today's leg =====
+function autoExpandToday() {
+  const cards = document.querySelectorAll('details.day-card');
+  const now = new Date();
+  // Trip is 14-17 May 2026
+  const dayByDate = { 14:'day1', 15:'day2', 16:'day3', 17:'day4' };
+  const m = now.getMonth(), y = now.getFullYear(), d = now.getDate();
+  const todayKey = (y === 2026 && m === 4) ? dayByDate[d] : null;
+  cards.forEach(c => { c.open = false; });
+  if (todayKey) {
+    const todayCard = document.querySelector(`details.day-card[data-day="${todayKey}"]`);
+    if (todayCard) todayCard.open = true;
+  } else {
+    // Pre-trip: open Day 02 (the main hike) by default
+    const main = document.querySelector(`details.day-card[data-day="day2"]`);
+    if (main) main.open = true;
+  }
+}
+autoExpandToday();
 
 // ===== Packing list =====
 const PACKING = [
@@ -555,8 +844,7 @@ const PACKING = [
     { id:'pack', name:'BACKPACK 40-50L' },
     { id:'cover', name:'PACK RAIN COVER' },
     { id:'sleepingBag', name:'SLEEPING BAG' },
-    { id:'pad', name:'SLEEPING PAD', hint:'IF SHELTER/BIVOUAC' },
-    { id:'bivy', name:'BIVY / PONCHO', hint:'BIVOUAC OPTION' }
+    { id:'pad', name:'SLEEPING PAD', hint:'IF ÚTULNA/BIVOUAC' }
   ]},
   { cat: 'CLOTHING (4D)', items: [
     { id:'boots', name:'HIKING BOOTS (BROKEN-IN)' },
@@ -581,11 +869,9 @@ const PACKING = [
   ]},
   { cat: 'FOOD / WATER', items: [
     { id:'bottle', name:'BOTTLE 1.5-2L' },
-    { id:'filter', name:'WATER FILTER', hint:'BIVOUAC OPTION' },
     { id:'snacks', name:'SNACKS + BARS (FRI+SAT)' },
     { id:'dinner', name:'EVENING RATIONS' },
-    { id:'beers', name:'BEERS // TRAIN PHASE' },
-    { id:'mug', name:'MUG / STOVE', hint:'BIVOUAC OPTION' }
+    { id:'beers', name:'BEERS // TRAIN PHASE' }
   ]},
   { cat: 'NAV / GADGETS', items: [
     { id:'phone', name:'PHONE + CHARGER' },
@@ -643,22 +929,12 @@ function packAll(v) { for (const c of PACKING) for (const it of c.items) state[i
 function packReset() { if (!confirm('PURGE ALL CHECKS?')) return; state = {}; localStorage.removeItem(STORE); renderPacking(); }
 renderPacking();
 
-// ===== Shelter voting =====
-const VOTE_STORE = 'orlicke-hory-shelter-votes-2026';
-let votes = JSON.parse(localStorage.getItem(VOTE_STORE) || '{"1":0,"2":0}');
-function renderVotes() {
-  document.getElementById('tally1').textContent = `${votes['1']} VOTE${votes['1']===1?'':'S'} // THIS NODE`;
-  document.getElementById('tally2').textContent = `${votes['2']} VOTE${votes['2']===1?'':'S'} // THIS NODE`;
-}
-function voteShelter(n) { votes[String(n)] = (votes[String(n)] || 0) + 1; localStorage.setItem(VOTE_STORE, JSON.stringify(votes)); renderVotes(); }
-renderVotes();
-
 // ===== Pre-sleep protocol =====
 const PROTOCOL = [
   { id:'thermal', name:'THERMAL BARRIER', detail:'Sleeping bag deployed' },
-  { id:'water', name:'WATER PURIFIED', detail:'Bottles refilled' },
+  { id:'water', name:'WATER PURIFIED', detail:'Bottles refilled for AM' },
   { id:'beacon', name:'SIGNAL BEACON', detail:'Phone @ 50%+, headlamp checked' },
-  { id:'fuel', name:'FUEL RESERVE', detail:'Snacks for Sat AM ready' }
+  { id:'fuel', name:'FUEL RESERVE', detail:'Snacks for next AM ready' }
 ];
 const PROTO_STORE = 'orlicke-hory-protocol-2026';
 let proto = JSON.parse(localStorage.getItem(PROTO_STORE) || '{}');
