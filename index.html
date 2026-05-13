@@ -849,25 +849,32 @@ autoExpandToday();
 const PACKING = [
   { cat: 'ID & MONEY', items: [
     { id:'op', name:'ID CARD' },
-    { id:'card', name:'CARD + CASH ~1500 CZK' },
+    { id:'card', name:'CARD + CASH ~2000 CZK', hint:'ÚTULNA + ČIHÁK = CASH ONLY' },
     { id:'vzp', name:'HEALTH-INS CARD' },
     { id:'ticket', name:'TRAIN TICKET (THU 16:58 + SUN 17:04)' }
   ]},
   { cat: 'PACK & SLEEP', items: [
     { id:'pack', name:'BACKPACK 40-50L' },
     { id:'cover', name:'PACK RAIN COVER' },
+    { id:'drybag', name:'DRY-BAG LINER / CONTRACTOR BAG', hint:'COVER PROTECTS OUTSIDE ONLY' },
+    { id:'poles', name:'TREKKING POLES', hint:'WET DESCENT INTO NERATOV' },
     { id:'sleepingBag', name:'SLEEPING BAG' },
-    { id:'pad', name:'SLEEPING PAD', hint:'IF ÚTULNA/BIVOUAC' }
+    { id:'pad', name:'SLEEPING PAD', hint:'IF ÚTULNA/BIVOUAC' },
+    { id:'newspaper', name:'NEWSPAPER / PAPER TOWELS', hint:'STUFF WET BOOTS OVERNIGHT' }
   ]},
   { cat: 'CLOTHING (4D)', items: [
     { id:'boots', name:'HIKING BOOTS (BROKEN-IN)' },
-    { id:'socks', name:'TREK SOCKS 3-4 PAIRS' },
+    { id:'socks', name:'TREK SOCKS 3-4 PAIRS', hint:'2 IN ZIPLOC FOR FRI MIDDAY SWAP' },
+    { id:'rainpants', name:'RAIN PANTS / OVER-TROUSERS', hint:'FRI 16MM @ 91% ON RIDGE' },
     { id:'pants', name:'TREK PANTS / SHORTS' },
     { id:'tees', name:'MERINO TEES 2-3' },
     { id:'midlayer', name:'MID-LAYER / FLEECE' },
     { id:'shell', name:'HARDSHELL (RAIN+WIND)' },
+    { id:'gloves', name:'LIGHT GLOVES', hint:'5°C MORNING RAIN ON RIDGE' },
+    { id:'gaiters', name:'GAITERS', hint:'SOAKED GRASS ON DESCENT' },
     { id:'beanie', name:'BEANIE + BUFF' },
     { id:'nightLayer', name:'WARM NIGHT LAYER' },
+    { id:'campshoes', name:'CROCS / CAMP SHOES', hint:'BOOTS DRY OVERNIGHT' },
     { id:'underwear', name:'UNDERWEAR' }
   ]},
   { cat: 'HYGIENE / MEDIC', items: [
@@ -877,11 +884,13 @@ const PACKING = [
     { id:'chafing', name:'CHAFING CREAM' },
     { id:'firstAid', name:'FIRST-AID KIT' },
     { id:'compeed', name:'COMPEED / BLISTERS' },
+    { id:'tickkey', name:'TICK KEY / TWEEZERS', hint:'MAY = PEAK TICK SEASON' },
     { id:'sun', name:'REPELLENT + SUNSCREEN' },
     { id:'tp', name:'TP + SEALED BAG' }
   ]},
   { cat: 'FOOD / WATER', items: [
     { id:'bottle', name:'BOTTLE 1.5-2L' },
+    { id:'thermos', name:'THERMOS + HOT DRINK', hint:'FRI RIDGE LUNCH MORALE' },
     { id:'snacks', name:'SNACKS + BARS (FRI+SAT)' },
     { id:'dinner', name:'EVENING RATIONS' },
     { id:'beers', name:'BEERS // TRAIN PHASE' }
@@ -895,7 +904,7 @@ const PACKING = [
     { id:'knife', name:'KNIFE / MULTITOOL' }
   ]},
   { cat: 'EXTRAS / RECON', items: [
-    { id:'camera', name:'CAMERA (V. ORLICE ATMO)' },
+    { id:'camera', name:'RICOH GR + DRY SACK', hint:'SKIP FRI · SHOOT SAT/SUN' },
     { id:'flask', name:'HIP FLASK // HANIČKA' },
     { id:'trash', name:'WASTE BAG' }
   ]}
