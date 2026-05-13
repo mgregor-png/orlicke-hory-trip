@@ -405,56 +405,6 @@ button.poi-btn:hover { color:#ff00ff; }
       </div>
     </div>
 
-    <!-- EMERGENCY -->
-    <div class="border-4 border-secondary bg-black p-4 mb-6 shadow-[4px_4px_0_#ccff00]">
-      <div class="flex justify-between items-center border-b-2 border-secondary pb-2 mb-3">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-secondary text-[20px]">emergency</span>
-          <span class="font-display text-[16px] uppercase italic font-black text-secondary glitch-sm">EMERGENCY // S.O.S.</span>
-        </div>
-        <span class="font-mono text-[9px] text-tertiary uppercase">SCREENSHOT THIS</span>
-      </div>
-
-      <!-- Contact tiles -->
-      <div class="grid grid-cols-2 gap-2 mb-4">
-        <a href="tel:112" class="bg-secondary text-black p-3 border-2 border-primary block">
-          <div class="font-mono text-[9px] uppercase opacity-80">EU EMERGENCY</div>
-          <div class="font-mono text-[24px] font-black leading-none">112</div>
-        </a>
-        <a href="tel:1210" class="bg-primary text-black p-3 border-2 border-primary block">
-          <div class="font-mono text-[9px] uppercase opacity-80">HORSKÁ SLUŽBA</div>
-          <div class="font-mono text-[24px] font-black leading-none">1210</div>
-        </a>
-        <a href="tel:155" class="bg-black text-primary p-3 border-2 border-primary block">
-          <div class="font-mono text-[9px] uppercase opacity-80">MEDICAL</div>
-          <div class="font-mono text-[24px] font-black leading-none">155</div>
-        </a>
-        <a href="tel:158" class="bg-black text-tertiary p-3 border-2 border-tertiary block">
-          <div class="font-mono text-[9px] uppercase opacity-80">POLICE</div>
-          <div class="font-mono text-[24px] font-black leading-none">158</div>
-        </a>
-      </div>
-
-      <!-- RV protocol -->
-      <div class="bg-secondary/10 border-l-4 border-secondary p-3 mb-3">
-        <div class="font-mono text-[10px] text-secondary uppercase tracking-widest font-bold mb-1">RENDEZVOUS PROTOCOL</div>
-        <ul class="font-mono text-[11px] text-on-background space-y-1 uppercase">
-          <li>FRI · IF SEPARATED → NERATOV CHURCH BY 18:00</li>
-          <li>SAT · IF SEPARATED → CHATA ČIHÁK BY 18:00</li>
-          <li>SUN · IF SEPARATED → MLADKOV STATION BY 16:00</li>
-          <li>NO SIGNAL? STAY ON MARKED TRAIL, MOVE DOWN</li>
-        </ul>
-      </div>
-
-      <!-- Sleep GPS -->
-      <div class="font-mono text-[10px] text-tertiary uppercase tracking-widest font-bold mb-1">SLEEP GPS</div>
-      <div class="space-y-1 font-mono text-[10px] uppercase">
-        <div class="flex justify-between border-b border-outline pb-1"><span>N01 ANIČKA</span><span class="text-primary">50.3030 N · 16.3464 E</span></div>
-        <div class="flex justify-between border-b border-outline pb-1"><span>N02 NERATOV (TBD)</span><span class="text-secondary">~50.1483 N · 16.5764 E</span></div>
-        <div class="flex justify-between"><span>N03 ČIHÁK</span><span class="text-primary">50.0958 N · 16.6753 E</span></div>
-      </div>
-    </div>
-
     <!-- Pre-sleep protocol -->
     <h4 class="font-display text-[16px] uppercase italic text-primary mb-3 flex items-center gap-2">
       PRE-SLEEP PROTOCOL
@@ -498,7 +448,7 @@ button.poi-btn:hover { color:#ff00ff; }
   <div class="p-5">
     <h4 id="poi-name" class="font-display text-[26px] uppercase italic font-black text-primary glitch leading-none mb-4">--</h4>
     <div id="poi-meta" class="grid grid-cols-3 gap-2 mb-4 pb-3 border-b-2 border-primary/30"></div>
-    <p id="poi-lore" class="font-mono text-[13px] text-on-background opacity-90 leading-relaxed mb-4"></p>
+    <div id="poi-lore" class="font-mono text-[13px] text-on-background opacity-90 leading-relaxed mb-4 space-y-3"></div>
     <div class="flex gap-2">
       <a id="poi-mapy" href="#" target="_blank" class="flex-1 bg-primary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">↗ MAPY.CZ</a>
       <button id="poi-copy" onclick="copyPOIGPS()" class="flex-1 bg-secondary text-black font-mono text-[11px] py-2 border-2 border-primary uppercase font-bold text-center tracking-wider">⎘ COPY GPS</button>
@@ -593,39 +543,96 @@ const POI = {
   anicka:        { name:'Apartmány Anička', ll:[50.3030,16.3464], type:'GUESTHOUSE',     acc:1 }
 };
 
-// Enriched POI details for the lore-worthy stops
+// Enriched POI details. Lore is an array of paragraphs.
 const POI_DETAILS = {
+  destne: {
+    water:'YES', food:'YES',
+    lore:[
+      'Mountain village in the upper valley of the Bělá creek, population around 700. Ski resort in winter, hiking hub in summer. The name "Deštné" comes from the Czech word for rain (déšť), this pocket of the range catches notably more weather than its surroundings.',
+      'Old wooden Church of St Mary Magdalene from 1731 sits at the centre. There is a small museum of Orlické hory pottery if anyone is keen. Bus stop right by the church, supermarket within 5 minutes walk.'
+    ]
+  },
+  masarykHut: {
+    water:'YES', food:'YES',
+    lore:[
+      'Masarykova chata built 1925 by the Czech Tourist Club (KČT), named after Tomáš Garrigue Masaryk, first president of Czechoslovakia. Burned down 1928, rebuilt the same year. The communist regime stripped Masaryk\'s name in the 1950s, it was restored in 1990.',
+      'Year-round mountain hut at 1018 m. Beer, hot soup, beds, fireplace. Last proper refuel before the ridge run, worth stopping for a Kofola.'
+    ]
+  },
   velkaDestna: {
     water:'NONE', food:'NONE',
-    lore:'High point of the Orlické hory ridge. Royal Trail (Královská cesta) plaque marks the summit. On a clear day you can see the Krkonoše to the west and the Polish lowlands to the east.'
+    lore:[
+      'At 1115 m, the highest point of the Orlické hory. Open summit, stone marker, a small weather station, and a "Královská cesta" (Royal Trail) plaque. The royal trail was the medieval ridge route from Bohemia into Silesia.',
+      'On a clear day, Krkonoše to the west and the Polish lowlands stretching east. The forest you cross on the way up is second growth, the original spruce was devastated by acid rain in the 1980s industrial period, this is replanted post-1990 stock.'
+    ]
+  },
+  kunstatChapel: {
+    water:'NONE', food:'NONE',
+    lore:[
+      'Baroque pilgrimage chapel of the Holy Trinity, built 1670, funded by Count Šťepán Pražma of Bílkov. Major pilgrimage destination through the 18th century, a Czech-German shared site before the war.',
+      'Wooden, recently restored. The chapel sits in a small clearing surrounded by spruce. Annual midsummer mass is still held. Pause here, the spot has weight.'
+    ]
+  },
+  peticesti: {
+    water:'NONE', food:'NONE',
+    lore:[
+      'Five-way trail junction at around 950 m. The shape has existed since at least the 17th century as a forester\'s crossroads. Red, blue, green, yellow markings all meet here.',
+      'Useful as a navigation reset if anyone gets ahead or behind. From here, the trail to Neratov drops 400 m over the next 5 km.'
+    ]
   },
   neratov: {
     water:'YES', food:'YES',
-    lore:'Burnt by the retreating Red Army in 1945. Roofless for 50 years. Restored in 2008 with a glass roof so "the sky stays in." Run by a workshop for disabled adults: the cafe sells their honey and beeswax candles.'
+    lore:[
+      'Village in the Divoká Orlice valley, German settlement until 1945, called Bärnwald. The Baroque Church of Mother of God dates from 1733. Burnt out by the retreating Red Army in May 1945, then left as a ruin for over 50 years.',
+      'Restored 2008 with a striking glass roof by architect Ladislav Šmíd, so "the sky stays in." The church is now the centre of the Neratov Association (Sdružení Neratov), a workshop community for adults with mental and physical disabilities. They run a cafe, a brewery, candle and honey workshops.',
+      'Friday evening: open-air concerts in summer, beer in the courtyard, candles from the workshop. Try the local honey.'
+    ]
   },
   vrchniOrlice: {
     water:'NONE', food:'NONE',
-    lore:'Village erased in the 1946 Sudeten German expulsions. Only the Baroque church of St John of Nepomuk remains, standing alone in a sea of nothing. The graveyard headstones are still in place. Pure Sudety ghost-frequency.'
+    lore:[
+      'Once a German village called Hohenerlitz, population around 400 in 1930. Erased after the 1946 Sudeten German expulsions, foundations bulldozed in the 1950s, the Czech state planted spruce over the site.',
+      'Only the Baroque Church of St John of Nepomuk (1715) survives, standing alone in a sea of trees. The old cemetery still holds crumbling German headstones, names like Hampel, Kreutz, Lischka.',
+      'One of the most haunting spots in the whole of the Sudety. The "genius loci" here is real. Bring a moment of quiet.'
+    ]
   },
   hanicka: {
     water:'NONE', food:'NONE',
-    lore:'Czechoslovak artillery fort, completed 1937 against Hitler. Never fired a shot, gifted to the Reich at Munich. Re-purposed by the StB in the 1970s as a secret nuclear command bunker. Vlasta narrates here.'
+    lore:[
+      'Czechoslovak artillery fortress, part of the inter-war border fortification line built 1935-1938 to hold against Hitler. Five combat blocks (M-S 1 through M-S 6) and two entrance objects, designed to fire 100 mm howitzers and protect the ridge.',
+      'Never fired a shot. The whole system was handed to the Reich at the Munich Agreement in September 1938. The Wehrmacht used it for explosives testing.',
+      'Secretly reactivated 1971-1995 by the StB (Czechoslovak state security) as a nuclear command bunker. Radio links to Moscow, decontamination chambers, food stores, staff of around 100. Declassified in 1995, now a museum.',
+      'Vlasta knows the inside tour. Expect concrete, the smell of damp steel, and the kind of Cold War paranoia that only Eastern Europe can deliver.'
+    ]
   },
   zemskaBrana: {
     water:'YES', food:'NONE',
-    lore:'Divoká Orlice river gorge. Granite walls, moss, cold water. The trail crossed the WWII fortification line here in 1938. Watch your step on the wet rocks.'
+    lore:[
+      'The Divoká Orlice river breaks through a granite ridge here, the gorge feels Alpine even though we are at 460 m. Name means "Earthly Gate", it referred to the medieval Bohemia-Kladsko (Polish Silesia) border.',
+      'Trail crosses on a wooden footbridge. Light WWII pillboxes (ropíky) line both rims of the gorge. Trout in the pools, watch the wet rocks on the descent.'
+    ]
   },
   adam: {
     water:'NONE', food:'NONE',
-    lore:'1938 light pillbox line (řopíky) right on the Czech-Polish wire. Stand with one foot in each country. The bunkers are concrete mushrooms now, half-swallowed by forest.'
+    lore:[
+      'Border peak (765 m) right on the Czech-Polish wire. Polish name is Adamowa Góra, same hill, different state.',
+      'Light pillbox line (řopíky, types vz.36 and vz.37) runs along the ridge, the bunkers are concrete mushrooms now, half-swallowed by spruce. Built 1936-1938 against the German threat from Silesia.',
+      'The actual border was moved a few dozen metres east in 1958 after a small territorial swap. Stand with one foot in each country, no passport needed, this is Schengen.'
+    ]
   },
   anicka: {
     water:'YES', food:'YES',
-    lore:'Apartments in Deštné v Orlických horách. Thu 14 May overnight, 7 adults across 2 rooms. Booked. Local bus drops you a few minutes away.'
+    lore:[
+      'Apartmány Dependance Anička, a family-run guesthouse a short walk from the Deštné bus stop. Two apartments across two floors for our crew of seven.',
+      'Thursday 14 May overnight, already booked. Czech mountain breakfast: bread, butter, ham, honey, beer at 7 AM if anyone asks nicely.'
+    ]
   },
   cihak: {
     water:'YES', food:'YES',
-    lore:'Mountain hut at Čihák 12 near Klášterec nad Orlicí. Sat night sleep, last bed before the walk-out to the border line and the train home Sunday.'
+    lore:[
+      'Chata Na Čiháku, Čihák 12, near Klášterec nad Orlicí-Žamberk. Originally a forester\'s cottage from the 1930s, now a paid mountain hut for hikers and skiers.',
+      'Wood stove, simple kitchen, dorm-style beds. Saturday night sleep, the last bed before the walk along the border line and the train home Sunday.'
+    ]
   }
 };
 
@@ -646,7 +653,14 @@ function openPOI(slug) {
   meta.push(`<div><span class="font-mono text-[9px] text-tertiary opacity-80 uppercase">GPS</span><div class="font-mono text-[11px] text-primary font-bold">${p.ll[0].toFixed(4)}<br/>${p.ll[1].toFixed(4)}</div></div>`);
   document.getElementById('poi-meta').innerHTML = meta.slice(0,3).join('');
 
-  document.getElementById('poi-lore').textContent = d.lore || `Waypoint on the route. ${p.type}.`;
+  const loreEl = document.getElementById('poi-lore');
+  if (Array.isArray(d.lore)) {
+    loreEl.innerHTML = d.lore.map(par => `<p>${par}</p>`).join('');
+  } else if (d.lore) {
+    loreEl.innerHTML = `<p>${d.lore}</p>`;
+  } else {
+    loreEl.innerHTML = `<p class="opacity-60">Waypoint on the route. ${p.type}.</p>`;
+  }
   document.getElementById('poi-mapy').href = `https://mapy.cz/turisticka?source=coor&id=${p.ll[1]},${p.ll[0]}&x=${p.ll[1]}&y=${p.ll[0]}&z=15`;
   document.getElementById('poi-copy-toast').classList.add('hidden');
 
